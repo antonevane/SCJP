@@ -30,3 +30,179 @@ Boxing
 		■ You can combine var-args with either widening or boxing.
 	
 	* такое возможно int[][] a = {{1,2,}, {3,4}};
+	
+Operators
+	* операторы += *= делают cast
+	
+	* операторы *= *= работают на выражением справа
+		int a *= 3 - 2
+		 Это не a = 3*a - 
+		 Это не a = a*(3-2)
+		 
+	* instanceof null всегда false
+	
+	* непрямая проверка instanceof true если супер класс имплеметирует интерфейс то и потомки неявно его имплеметирует
+		interface Foo { }
+		class A implements Foo { }
+		class B extends A { }
+		...
+		A a = new A();
+		B b = new B();
+		
+	  the following are true:
+		a instanceof Foo
+		b instanceof A
+		b instanceof Foo // implemented indirectly
+		
+	* Нельзя проверять через instanceof 2 разные иерархии классов это Compilation Error
+		class Cat { }
+		class Dog {
+			public static void main(String [] args) {
+				Dog d = new Dog();
+				System.out.println(d instanceof Cat);
+			}
+		}
+	
+	* Массивы это объекты они проверяются True
+		if (nums instanceof Object) { } // result is true
+	
+	* операторы * , / и % имеют приоритет выше чем + и -
+	
+	* скобки имеют приоритет
+	
+	* При конкотенации строки если поставить скобки то будет вычисляться результат
+		String a = "String";
+		int b = 3;
+		int c = 7;
+		System.out.println(a + (b + c)); // Result is String37
+		System.out.println(a + (b + c)); // Result is String10
+		
+	* Если слева строка производится конкатенация
+		String s = "123";
+		s += "45";
+		s += 67;
+		System.out.println(s); //1234567
+	
+	* инкрементное значение i++ - сначала присваивается потом увеличивается
+	
+	* Быть осторожным с ++ -- для final переменых
+		final int x = 5;
+		int y = x++;
+		//and produces the error:
+		Test.java:4: cannot assign a value to final variable x
+		int y = x++;
+				^
+	
+	* && and || используются только с булевыми операндами
+		if (5 && 6) { } // Compilation error потому что 5 и 6 int
+	
+	* & и | - вычисляют обе части
+	
+	* ^ - вычисляет обе части. Если оба операнда одинаковые то значение false
+
+Flow, Control, Exceptions, Assertions
+	* УПС
+		int y = 5;
+		int x = 2;
+		if ((x > 3) && (y < 2) | doStuff())Не напечатает так как используется короткая схема
+		
+		if (((x > 3) && (y < 2)) | doStuff()) Все ок 2я часть вычисляется всегда и все ОК 
+		{
+			System.out.println("true"); Не напечатает так как используется короткая схема
+			}
+		}
+
+		static boolean doStuff() {
+			return true;
+		}
+	
+	* в if присвоение возможно только для Boolean и boolean, остальное compilation error
+		boolean boo = false;
+		if (boo = true) { } //Все ок даже присвоение проходит
+		
+		int x = 3;
+		if (x = 5) { } // Won't compile because x is not a boolean!
+		
+	* switch проверяет char, byte, short, int, enum 
+	* в switch cast возможен
+	
+	* в метках switch можно использовать final переменные
+		final short s =1;	
+		int i = 1;
+		
+		switch (s) {
+			case s:		All OK
+				break;
+		}
+		
+		//But,
+		final short s;
+		s =1;			
+		int i = 1;
+		
+		switch (s) {
+			case s:		//Compile error
+				break;
+		}
+		
+	* Одинаковые имена меток это fail
+	
+	* Если в выражение switch передать значение ниже int например byte,
+		 и в метке указать значение больше значения типа то будет ошибка компиляции
+	
+		byte g = 2;
+		switch(g) {
+			case 23: 
+			case 128: // 128 > разрешенных 127
+		}
+		
+	* в switch case и : после метки обязательны
+	
+	* В switch char сравнивается как unicode
+	
+	* В switch при char работает и значение не unicode char и unicode char
+				char c = '1';
+
+		switch (c) {
+			case 65535: //Legal last char
+				System.out.println("1");
+				break;
+
+			case '\u0001': //Legal
+				System.out.println("1"); 
+				break;
+
+			case 65536: 
+				System.out.println("1"); //Compile error
+				break;
+
+			default:
+				System.out.println("Default");
+				break;
+		}
+		
+		char c = '\u0001';
+		
+		switch (c) {
+			case '\u0001':
+				System.out.println("\u0001"); //Напечатается Юникод символ
+				break;
+		}
+
+  Loops and Iterators (Exam Objective 2.2)
+	* В блоке увеличения переменной может быть печать  и т п
+		int d = 3;
+		for (int a = 1; d != 1; System.out.println("iterate")) {
+			d = d - a;
+		}
+
+		int b = 3;
+		for (int a = 1; b != 1; new String()) {
+			b = b - a;
+		}
+		
+		//Но
+		int b = 3;
+		for (int a = 1; b != 1; {new String()}) { // ошибка
+			b = b - a;
+		}
