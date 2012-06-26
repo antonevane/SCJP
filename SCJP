@@ -1,0 +1,32 @@
+Boxing
+	* Boolean, Byte, Character from \u0000 to \u007f (127), Short and Integer from -128 to 127 They are be =
+	
+		Integer i1 = 10;
+		Integer i2 = 10;
+		i1 == i2; // True
+		
+		Integer i1 = 128;
+		Integer i2 = 128;
+		i1 == i2; // False because > 127 but equals True
+	 
+	 * Оболочные классы не могут быть расширены Bytes не может быть раширен до Short e.t.c
+	 * При overloading и autoboxing если просходит раширение до типа то проверяется IS-A
+	
+	 	class WidenAndBox {
+	 		static void go(Long x) { System.out.println("Long"); }
+            
+            public static void main(String [] args) {
+                    byte b = 5;
+                    go(b); // must widen then box - illegal
+			} 
+		}
+	
+	* Here's a review of the rules for overloading methods using widening, boxing, and var-args:
+		■ Primitive widening uses the "smallest" method argument possible.
+		■ Used individually, boxing and var-args are compatible with overloading.
+		■ You CANNOT widen from one wrapper type to another. (IS-A fails.)
+		■ You CANNOT widen and then box. (An int can't become a Long.)
+		■ You can box and then widen. (An int can become an Object, via Integer.)
+		■ You can combine var-args with either widening or boxing.
+	
+	* такое возможно int[][] a = {{1,2,}, {3,4}};
