@@ -104,11 +104,11 @@ Flow, Control, Exceptions, Assertions
 	* УПС
 		int y = 5;
 		int x = 2;
-		if ((x > 3) && (y < 2) | doStuff())Не напечатает так как используется короткая схема
+		if ((x > 3) && (y < 2) | doStuff()) //Не напечатает так как используется короткая схема
 		
-		if (((x > 3) && (y < 2)) | doStuff()) Все ок 2я часть вычисляется всегда и все ОК 
+		if (((x > 3) && (y < 2)) | doStuff()) //Все ок 2я часть вычисляется всегда и все ОК 
 		{
-			System.out.println("true"); Не напечатает так как используется короткая схема
+			System.out.println("true"); //Не напечатает так как используется короткая схема
 			}
 		}
 
@@ -145,7 +145,7 @@ Flow, Control, Exceptions, Assertions
 				break;
 		}
 		
-	* Одинаковые имена меток это fail
+	* Одинаковые имена меток это Compile error
 	
 	* Если в выражение switch передать значение ниже int например byte,
 		 и в метке указать значение больше значения типа то будет ошибка компиляции
@@ -173,7 +173,7 @@ Flow, Control, Exceptions, Assertions
 				break;
 
 			case 65536: 
-				System.out.println("1"); //Compile error
+				System.out.println("1"); //Compile error значение юольше разрешенного 65535 для char
 				break;
 
 			default:
@@ -190,7 +190,7 @@ Flow, Control, Exceptions, Assertions
 		}
 
   Loops and Iterators (Exam Objective 2.2)
-	* В блоке увеличения переменной может быть печать  и т п
+	* В блоке увеличения переменной может быть печать, анонимное создание класаса и т п
 		int d = 3;
 		for (int a = 1; d != 1; System.out.println("iterate")) {
 			d = d - a;
@@ -203,6 +203,168 @@ Flow, Control, Exceptions, Assertions
 		
 		//Но
 		int b = 3;
-		for (int a = 1; b != 1; {new String()}) { // ошибка
+		for (int a = 1; b != 1; {new String()}) { // ошибка из за {}
 			b = b - a;
 		}
+		
+	* continue - используется только в циклах
+	
+	* break - используется в циклах и switch
+	
+	* Метка должна предворять цикл или иметь {} в случае наличия выражение перед ней
+	
+		label: //All OK 
+			for (int i = 0; i < args.length; i++) {
+				System.out.println("InLOOP");
+				break label;
+			}
+
+		// Но ошибка если что то есть
+		label: //Compile error
+			System.out.println("Before Loop");
+			for (int i = 0; i < args.length; i++) {
+				System.out.println("InLOOP");
+				break label;
+			}
+			
+		// Но нет ошибки если есть {}
+		label: { //OK
+			System.out.println("Before Loop");
+			for (int i = 0; i < args.length; i++) {
+				System.out.println("InLOOP");
+				break label;
+			}
+		}
+		
+Handling Exceptions (Exam Objectives 2.4 and 2.5)
+	* Иерархия классов Exception
+		Object
+		  |
+	   Throwable
+	    |	   |
+	 Error    ____Exception______
+	 |		|					|
+Others... RuntimeException	 Others... 
+
+	* Если в коде выбрасывается исключение и оно checked то будет compile error
+		
+		//Fail IOException нужно задекларировать
+		public void doStuff() {
+			try {
+				// risky IO things
+			} catch(IOException ex) {
+				// can't handle it
+				throw ex; // Can't throw it unless you declare it
+			}
+		}
+	
+	* finally может не вызваться если в try или catch вызван System.exit()  
+		
+Common Exceptions and Errors (Exam Objective 2.6)
+	*Throw JVM
+		ArrayIndexOutOfBoundsException
+		ClassCastException
+		NullPointerException
+		ExceptionInInitializerError
+		StackOverflowError
+		NoClassDefFoundError
+	
+	*throw Programmatically
+		IllegalArgumentException
+		IllegalStateException
+		NumberFormatException
+		AssertionError
+
+Working with the Assertion Mechanism  (Exam Objective 2.3)
+	*Валидное использование Assertion
+		int x = 1;
+		boolean b = true;
+		int aReturn() { return 1; }
+		
+		assert(x == 1);
+		assert(b);
+		assert true;
+		assert(x == 1) : x;
+		assert(x == 1) : aReturn();
+		assert(x == 1) : new ValidAssert();
+		
+	*Невалидное использование Assertion
+		void noReturn() { }
+		
+		assert(x = 1); // none of these are booleans
+		assert(x);
+		assert 0;
+		assert(x == 1) : ; // none of these return a value
+		assert(x == 1) : noReturn();
+		assert(x == 1) : ValidAssert va;
+		
+	* До версии 1.4 слово assert можно использовать как идентификатор
+		int assert = getInitialValue();
+		if (assert == getActualResult()) {
+			// do something
+		}
+	  
+	  Если использовать компиляцию для 1.6 будет ошибка, 
+	  но можно сделать javac -source 1.3 OldCode.java - все ок хотя если использовать assert как ключевое слово то это ошибка
+	  
+	 * 2 опции для включения компиляторов 5,6 
+	 	-source 1.6 or -source 6
+	 	-source 1.5 or -source 5
+	 
+	 * Компиляция под разные версии JVM
+	 	javac -source 1.3 TestAsserts.java
+	 	javac -source 1.4 TestAsserts.java
+	 	javac -source 1.5 TestAsserts.java
+	 	javac -source 5 TestAsserts.java
+	 	javac -source 1.6 TestAsserts.java
+	 	javac -source 6 TestAsserts.java
+	 
+	 * Включение assertion в runtime
+	 	java -ea com.pack.TestClass
+	 	java -enableassertions com.pack.TestClass
+	 	
+	 * Выключение assertion в runtime
+	 	java -da com.pack.TestClass
+	 	java -disableassertions com.pack.TestClass
+	 	
+	 * Частичное исключение классов
+	 	java -ea -da:com.geeksanonymous.Foo Test
+	 	
+	 * Частичное исключение пакетов
+	 	java -ea -da:com.geeksanonymous...
+	 	
+	 * Tricky assertion
+	 	java -ea -dsa Enable assertions in general, but disable assertions in system classes.
+
+Using Assertions Appropriately (По конвеции Sun)
+	 * Inappropriate использовать assertion для валидации аргументов в public методах
+		 public void doMore(int x) {
+			assert (x > 0);
+			// do things with x
+		}
+	 * Inappropriate использовать assertion для валидации аргументов командной строки
+	 * Inappropriate использовать assertion для изменения логики работы программы, при вызове assertion и без него логика остается таже
+	 	public void doStuff() {
+			assert (modifyThings());
+			// continues on
+		}
+		
+		public boolean modifyThings() {
+			y = x++;
+			return true;
+		}
+	 
+	 * Appropriate использовать assertion для валидации аргументов в private методах
+	 	private void doMore(int x) {
+			assert (x > 0);
+			// do things with x
+		}
+	
+	* Appropriate использовать assertion для кода который точно никогда не выполнится даже в public методах
+		switch(x) {
+			case 1: y = 3; break;
+			case 2: y = 9; break;
+			case 3: y = 27; break;
+			default: assert false; // we're never supposed to get here!
+		}
+	
