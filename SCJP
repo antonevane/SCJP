@@ -1,3 +1,8 @@
+Arrays
+	* У массивов length это свойство
+		String[] x = new String[3];
+		System.out.println( x.length() ); // compiler error
+	
 Boxing
 	* Boolean, Byte, Character from \u0000 to \u007f (127), Short and Integer from -128 to 127 They are be =
 	
@@ -367,4 +372,32 @@ Using Assertions Appropriately (По конвеции Sun)
 			case 3: y = 27; break;
 			default: assert false; // we're never supposed to get here!
 		}
+
+Strings
+	* Создание строк генерирует разное число объектов
+		String s = "abc"; // creates one String object and one 
+							// reference variable
+		// В этом случае "abc" отправляется в pool и создается ссылка s 
+		
+		String s = new String("abc"); // creates two objects, 
+										// and one reference variable
+		//В этом случае создается объект в обычной памяти, создается ссылка, а также "abc" помещается в пул				
+		
+	* Методы которые встречаются на экзамене
+		■  charAt()Returns the character located at the specified index
+		■  concat()Appends one String to the end of another ( "+" also works)
+		■  equalsIgnoreCase() Determines the equality of two Strings, ignoring case
+		■  length()Returns the number of characters in a String
+		■  replace()Replaces occurrences of a character with a new character
+		■  substring()Returns a part of a String
+		■  toLowerCase()Returns a String with uppercase characters converted
+		■  toString()Returns the value of a String
+		■  toUpperCase()Returns a String with lowercase characters converted
+		■  trim()Removes whitespace from the ends of a String
+	
+	* У строк length это мето
+		String x = "test";
+		System.out.println( x.length ); // compiler error
+		
+	
 	
