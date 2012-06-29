@@ -384,20 +384,71 @@ Strings
 		//В этом случае создается объект в обычной памяти, создается ссылка, а также "abc" помещается в пул				
 		
 	* Методы которые встречаются на экзамене
-		■  charAt()Returns the character located at the specified index
-		■  concat()Appends one String to the end of another ( "+" also works)
-		■  equalsIgnoreCase() Determines the equality of two Strings, ignoring case
-		■  length()Returns the number of characters in a String
-		■  replace()Replaces occurrences of a character with a new character
-		■  substring()Returns a part of a String
-		■  toLowerCase()Returns a String with uppercase characters converted
-		■  toString()Returns the value of a String
-		■  toUpperCase()Returns a String with lowercase characters converted
-		■  trim()Removes whitespace from the ends of a String
+		■  public charAt()Returns the character located at the specified index
+		■  public concat()Appends one String to the end of another ( "+" also works)
+		■  public equalsIgnoreCase() Determines the equality of two Strings, ignoring case
+		■  public length()Returns the number of characters in a String
+		■  public replace()Replaces occurrences of a character with a new character
+		■  public substring()Returns a part of a String
+		■  public toLowerCase()Returns a String with uppercase characters converted
+		■  public toString()Returns the value of a String
+		■  public toUpperCase()Returns a String with lowercase characters converted
+		■  public trim() Removes whitespace from the ends of a String
 	
 	* У строк length это мето
 		String x = "test";
 		System.out.println( x.length ); // compiler error
 		
-	
-	
+	* substring() в Java хитрый
+		String x = "0123456789"
+		System.out.println( x.substring(5) ); // output is "56789"
+		System.out.println( x.substring(5, 8)); // output is "567"
+		//Во втором случае с 5го индекса и до 8го индекса или до 7го включительно
+		
+StringBuffer, StringBuilder
+	* Методы которые встречаются на экзамене для StringBuffer (для StringBuilder они not sychronized)
+		■  public synchronized StringBuffer append(String s) - This method will take many dif-ferent arguments, including boolean, char, double, float, int, long, and other
+			StringBuffer sb = new StringBuffer("set ");
+			sb.append("point");
+			
+		■  public StringBuilder delete(int start, int end)
+			StringBuilder sb = new StringBuilder("0123456789");
+			System.out.println(sb.delete(4,6)); // output is "01236789"
+			
+		■  public StringBuilder insert(int offset, String s)
+			StringBuilder sb = new StringBuilder("01234567");
+			sb.insert(4, "---");
+			System.out.println( sb ); // output is "0123---4567"
+			
+		■  public synchronized StringBuffer reverse()
+			StringBuffer s = new StringBuffer("A man a plan a canal Panama");
+			sb.reverse();
+			System.out.println(sb); // output: "amanaP lanac a nalp a nam A"
+			
+		■  public String toString()
+
+File Navigation and I/O (Exam Objective 3.2)
+	* I/O Классы для экзамена
+		■  File - абстрактное представление файла и директорий с путями до них 
+		■  FileReader - класс для чтения символа из файла. Метод read() - читает один символ. Читает потоки символов. Фиксированный набор символов.
+			FileReader - обычно оборачивают Высокоуровнемы классами Reader, таким как BufferedReaders - который улучшает производительность засчет буфферизации 
+			и предоставляет более удобные способы для работы с данными
+		
+		■  BufferedReader - lower-level Reader. В сравнении с FileReader считывает относительно большие куски данных из файла и помещает в буфер.
+			Когда запашиватся символ или строка данных они достаются из буфера - это уменьшает количество обращений к файлу тем самым увеличивается
+			производительность.
+			Кроме того BufferedReader предоставляет более удобные, по сравнению с FileReader методы например readLine() - считывает следующую строку из файла 
+		
+		■  FileWriter - используется для записи символа в файл. Его методы write() позволяют записывать: символ(ы), или строки в файл.
+			FileWriter обычно оборачивают Высокоуровнемы классами Writer таким как BufferedWriter или PrintWriter, которые предоставляю лучшую производительность 
+			и более удобные методы для записи данных в файл.
+			
+		■  BufferedWriter - используется для высокоуровнего представления классов таких как FileWriter. В сравнении с FileWrite записывает относительно большие куски данных
+			 порциями, тем самым уменьшая количество тяжелых операций записи.
+			 BufferedWriter предоставляет удобные методы для записи в файл, например newLine() - автоматически создает платформенно специфичный символ новой строки
+			 
+		■  PrintWriter - самый мощный и доработанный класс
+
+	* Обязательно нужен import java.io.*;
+	* new File("fileWrite1.txt") не создает еще файл
+		newFile = file.createNewFile() - создает файл или gthtlftn yf ytuj 
