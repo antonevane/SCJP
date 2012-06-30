@@ -448,7 +448,47 @@ File Navigation and I/O (Exam Objective 3.2)
 			 BufferedWriter предоставляет удобные методы для записи в файл, например newLine() - автоматически создает платформенно специфичный символ новой строки
 			 
 		■  PrintWriter - самый мощный и доработанный класс
+		
+		■  Console - класс для работы с консолью
 
 	* Обязательно нужен import java.io.*;
 	* new File("fileWrite1.txt") не создает еще файл
-		newFile = file.createNewFile() - создает файл или gthtlftn yf ytuj 
+		newFile = file.createNewFile() - создает файл или ссылку на существующий возвращает boolean
+		System.out.println(file.exists());  // look for a real file
+		
+	* createNewFile() создает новый файл только если он не существует
+	
+	* FileWriter - нужно делать flush() и close()
+	
+	* FileWriter fw = new FileWriter(file); // Физически создает файл
+	
+	* FileReader - read(char [] buffer), обязательно нужно закрывать
+	
+	* File - имеет метод по созданию директории mkDir()
+	
+	* File - можно привезать и к директории File(File директория, String имя_файла)
+	
+	* Если не создать директорию вызвав метод но передать в конструктор то будет ошибка java.io.IOException: No such file or directory
+	
+	* метод delete() у класса File не может удалить директорию если она не пустая
+	
+	* renameTo() - выбросит NullPointerEception если передать null в имя нового файла
+	
+	* Для поиска файла используется метод String [] search()
+		String[] files = new String[100];
+		File search = new File("searchThis");
+		files = search.list();
+		
+java.io.Console Class
+	* System.console() - возвращает ссылку на физическую консоль, невозможно использовать если нет доступа
+
+	* char[] readPassword - возвращает набор символов чтобы не быть помещенным в StringPool
+	
+	* Получение консоли Console c = System.console();
+	
+	* pw = c.readPassword("%s", "pw: "); - 1й параметр формат 2й приветствие
+	
+	* c.format("%c", char_) - форматированный вывод
+	
+Serialization (Exam Objective 3.3)
+	
