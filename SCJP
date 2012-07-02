@@ -639,4 +639,20 @@ Dates, Numbers, and Currency (Exam Objective 3.4)
 		fn.parse("1234.567") //Выводит 1234
 		
 Parsing, Tokenizing, and Formatting (Exam Objective 3.5)
-	*	
+	* Патерны Regex
+		\d - цифры
+		\s - пробелы
+		\w - слова (буквы, цифры, '_')
+		[a-z] - группа
+		+ 1 или более
+		* - 0 или более
+		? - 0 или 1
+	
+	* Mathcher matcher = pattern.matcher() - получение matcher
+		matcher.find() - осуществляет поиск
+		matcher.group() - возвращает искомую подстроку
+		matcher.start() - возвращает индекс искомой подстроки
+		
+	
+	
+	
