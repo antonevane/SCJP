@@ -491,4 +491,152 @@ java.io.Console Class
 	* c.format("%c", char_) - форматированный вывод
 	
 Serialization (Exam Objective 3.3)
+	* ObjectOutputStream.writeObject() // serialize and write
 	
+	* ObjectInputStream.readObject() // read and deserialize
+	
+	* Обязательно должен быть имплеменирован интерфейс Serializable
+	
+	* Все классы которые ссылаются на сериализованный объект должны быть Serializable
+	
+	* Если нет возможности сохранить класс то можно пометить его transient
+	
+	* readObject бросает ClassNotFoundException
+	
+	* Для того чтобы обойти ограничение несериализуемого объекта можно создать 2 метода для управления процессом сериализации:
+		private void writeObject(ObjectOutputStream os){
+			// throws IOException { // 1
+			try {
+				os.defaultWriteObject();// 2
+				os.writeInt(theCollar.getCollarSize()); // 3 
+			} catch (Exception e) { e.printStackTrace(); }
+		}
+		
+		private void readObject(ObjectInputStream is) {
+			// throws IOException, ClassNotFoundException { // 4 
+			try {
+				is.defaultReadObject();// 5 
+				theCollar = new Collar(is.readInt()); // 6
+			} catch (Exception e) { e.printStackTrace(); }
+		}
+	
+	* Порядок чтения должен быть таким же как и при записи в случае записи дополнительного кода : os.writeInt(int)
+	
+	* При сериализации коллекций и массивов - все их элементы должны быть Serializarble
+	
+	* Object не Serializable
+	
+	* static не сериализуются потому что принадлежат классу
+	
+Inheritance and Serialization
+	* В случае если супер класс не Serializable, а потомок да то при восстановление унаследованная часть будет переинициализирована
+		
+		!!!!!Конструктор запустится заново!!!
+		
+		class Animal {
+			public String name;
+		}
+		class Dog extends Animal implements Serializable {
+			// the rest of the Dog code
+		}
+	
+Dates, Numbers, and Currency (Exam Objective 3.4)
+	* На экзамене необходимо понимать следующие классы
+		■  java.util.Date
+		■  java.util.Calendar
+		■  java.util.Locale
+		■  java.text.DateFormat
+		■  java.text.NumberFormat
+	
+	* Типичные операции
+		■  Получить текущую дату и время
+			Date d = new Date();
+			String s = d.toString();
+		■  Получить объект позволяющий выполнять операции с датой и временем в вашей локале
+			Calendar c = Calendar.getInstance();
+			c.add(...)
+			c.rool(...)
+		■  Получить объект позволяющий выполнять операции с датой и временем в различной локале
+			Locale loc = new Locale(language);or
+			Locale loc = new Locale(language, country);
+			
+			Calendar c = Calendar.getInstance(loc);
+			c.add(...)
+			c.rool(...)
+		■  Получить объект позволяющий выполнять операции с датой и временем в различной локале и применить форматировый вывод в разных стилях
+			Calendar c = Calendar.getInstance();
+			Locale loc = new Locale(...);
+			Date d = c.getTime();
+			DateFormat df = DateFormat.getDateInstance(style, loc);
+			String s = df.format(d);
+		■  Получить объект позволяющий выполнять форматирование цифр и валют в различных локалях
+			Locale loc = new Locale(...);
+			NumberFormat nf = NumberFormat.getInstance(loc);
+				-or- NumberFormat nf = NumberFormat.getCurrencyInstance(loc);
+			String s = nf.format(someNumber);
+	
+	* Calendar зависит от локали - Calendar.SUNDAY == c.getFirstDayOfWeek() - проверка дня недели в Англии это Sunday в России Monday
+	
+	* Calendar абстрактный класс, но имеет статический инициализатор который инстанцирует календарь
+	
+	* Calendar.getInstance() - инициализируется текущим временем
+	
+	* В календаре месяц при установке начинается с 0
+		Calendar c = Calendar.getInstance();
+		c.set(2010, 11, 14); // December 14, 2010
+	
+	* calendar.add(field, amount) - добавляет значение если не указать отрицательное число
+	
+	* roll - метод для увеличения или умньшения части даты, но не позволяет перейти границу значения
+		// assume c is October 8, 2001
+		c.roll(Calendar.MONTH, 9); // notice the year in the output
+		Date d4 = c.getTime();
+		System.out.println("new date " + d4.toString() ); //new date Fri Jul 08 19:46:40 MDT 2001
+	
+	* DateFormat - абстрактный с 
+		DateFormat.getInstance();                      //9/8/01 7:46 PM
+		DateFormat.getDateInstance();                  //Sep 8, 2001
+		DateFormat.getDateInstance(DateFormat.SHORT);  //9/8/01
+		DateFormat.getDateInstance(DateFormat.MEDIUM); //Sep 8, 2001
+		DateFormat.getDateInstance(DateFormat.LONG);   //September 8, 2001
+		DateFormat.getDateInstance(DateFormat.FULL);   //Saturday, September 8, 2001
+		
+		String df.format(дата)
+		Date df.parse(String)
+	
+	* DateFormat и NumberFormat - не меняют локали в runtime это ошибка компиляции 
+	
+	* Класс Locale 2 конструктора и 1 статический инициализатор
+		Locale defaultLocale = Locale.getDefault();
+		Locale locPT = new Locale("it"); // Italian
+		Locale locBR = new Locale("it", "CH"); // Switzerland
+	
+	* Класс Locale методы
+		Locale locBR = new Locale("pt", "BR"); // Brazil
+		System.out.println("def " + locBR.getDisplayCountry());      //Brasil
+		System.out.println("loc " + locBR.getDisplayCountry(locBR)); //Brasil
+		
+	* Класс NumberFormat абстрактный со статическими инициализаторами
+		Locale locFR = new Locale("fr");
+		NumberFormat.getInstance();				//123.457
+		NumberFormat.getInstance(locFR);		//123.457
+		NumberFormat.getCurrencyInstance();		//$123.46
+		NumberFormat.getCurrencyInstance(loc);	//123,46 ?
+		
+		Вызвав format(число)	
+	
+	* По умолчанию количество цифр после запятой 3
+		float f = 10.1126f;
+		NumberFormat fn = NumberFormat.getInstance();
+		System.out.println(fn.getMaximumFractionDigits());	//Выведет 3
+		System.out.print(nf.format(f1) + " "); 				//Выведет 10,113
+		// Можно расширить
+		fn.setMaximumFractionDigits(5);
+		System.out.print(nf.format(f1) + " "); 				//Выведет 10,1126
+		fn.parse("1234.567") // Бросает ParseException и Возвращает Number - который абстрактный и реализуют оболочки примитивных типов
+		fn.setParseIntegerOnly(true); //Задает парсинг только integer
+		
+		fn.parse("1234.567") //Выводит 1234
+		
+Parsing, Tokenizing, and Formatting (Exam Objective 3.5)
+	*	
