@@ -7,9 +7,7 @@ public class Formatters {
 	 */
 	public static void main(String[] args) {
 		double a = -1.000011121;
-		System.out.format("%0,7d",1232349.01f);
-		
-
+		System.out.format("%0,7d", 1232349.01f);
 	}
 
 }

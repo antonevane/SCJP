@@ -13,8 +13,12 @@ Boxing
 		Integer i1 = 128;
 		Integer i2 = 128;
 		i1 == i2; // False because > 127 but equals True
+		long l = 128L;
+		i1.equals(l) // Будет false
+	 
 	 
 	 * Оболочные классы не могут быть расширены Bytes не может быть раширен до Short e.t.c
+	 
 	 * При overloading и autoboxing если просходит раширение до типа то проверяется IS-A
 	
 	 	class WidenAndBox {
@@ -128,7 +132,8 @@ Flow, Control, Exceptions, Assertions
 		int x = 3;
 		if (x = 5) { } // Won't compile because x is not a boolean!
 		
-	* switch проверяет char, byte, short, int, enum 
+	* switch проверяет char, byte, short, int, enum
+	
 	* в switch cast возможен
 	
 	* в метках switch можно использовать final переменные
@@ -384,18 +389,19 @@ Strings
 		//В этом случае создается объект в обычной памяти, создается ссылка, а также "abc" помещается в пул				
 		
 	* Методы которые встречаются на экзамене
-		■  public charAt()Returns the character located at the specified index
-		■  public concat()Appends one String to the end of another ( "+" also works)
-		■  public equalsIgnoreCase() Determines the equality of two Strings, ignoring case
-		■  public length()Returns the number of characters in a String
-		■  public replace()Replaces occurrences of a character with a new character
-		■  public substring()Returns a part of a String
-		■  public toLowerCase()Returns a String with uppercase characters converted
-		■  public toString()Returns the value of a String
-		■  public toUpperCase()Returns a String with lowercase characters converted
-		■  public trim() Removes whitespace from the ends of a String
+		■  public charAt(index) 				Returns the character located at the specified index
+		■  public concat(string)				Appends one String to the end of another ( "+" also works)
+		■  public equalsIgnoreCase(string) 		Determines the equality of two Strings, ignoring case
+		■  public length() 						Returns the number of characters in a String
+		■  public replace(char, replaceChar)	Replaces occurrences of a character with a new character
+		■  public substring(startPos) 			Returns a part of a String
+		■  public substring(startPos, endPos)	Returns a part of a String
+		■  public toLowerCase() 				Returns a String with uppercase characters converted
+		■  public toString() 					Returns the value of a String
+		■  public toUpperCase() 				Returns a String with lowercase characters converted
+		■  public trim() 						Removes whitespace from the ends of a String
 	
-	* У строк length это мето
+	* У строк length это метод
 		String x = "test";
 		System.out.println( x.length ); // compiler error
 		
@@ -407,7 +413,7 @@ Strings
 		
 StringBuffer, StringBuilder
 	* Методы которые встречаются на экзамене для StringBuffer (для StringBuilder они not sychronized)
-		■  public synchronized StringBuffer append(String s) - This method will take many dif-ferent arguments, including boolean, char, double, float, int, long, and other
+		■  public synchronized StringBuffer append(String s) - This method will take many different arguments, including boolean, char, double, float, int, long, and other
 			StringBuffer sb = new StringBuffer("set ");
 			sb.append("point");
 			
@@ -430,8 +436,9 @@ StringBuffer, StringBuilder
 File Navigation and I/O (Exam Objective 3.2)
 	* I/O Классы для экзамена
 		■  File - абстрактное представление файла и директорий с путями до них 
+		
 		■  FileReader - класс для чтения символа из файла. Метод read() - читает один символ. Читает потоки символов. Фиксированный набор символов.
-			FileReader - обычно оборачивают Высокоуровнемы классами Reader, таким как BufferedReaders - который улучшает производительность засчет буфферизации 
+			FileReader - обычно оборачивают Высокоуровнемы классами Reader, таким как BufferedReader - который улучшает производительность засчет буфферизации 
 			и предоставляет более удобные способы для работы с данными
 		
 		■  BufferedReader - lower-level Reader. В сравнении с FileReader считывает относительно большие куски данных из файла и помещает в буфер.
@@ -452,6 +459,7 @@ File Navigation and I/O (Exam Objective 3.2)
 		■  Console - класс для работы с консолью
 
 	* Обязательно нужен import java.io.*;
+	
 	* new File("fileWrite1.txt") не создает еще файл
 		newFile = file.createNewFile() - создает файл или ссылку на существующий возвращает boolean
 		System.out.println(file.exists());  // look for a real file
@@ -463,6 +471,8 @@ File Navigation and I/O (Exam Objective 3.2)
 	* FileWriter fw = new FileWriter(file); // Физически создает файл
 	
 	* FileReader - read(char [] buffer), обязательно нужно закрывать
+	
+	* Reader не иммет Flush
 	
 	* File - имеет метод по созданию директории mkDir()
 	
@@ -552,10 +562,12 @@ Dates, Numbers, and Currency (Exam Objective 3.4)
 		■  Получить текущую дату и время
 			Date d = new Date();
 			String s = d.toString();
+			
 		■  Получить объект позволяющий выполнять операции с датой и временем в вашей локале
 			Calendar c = Calendar.getInstance();
 			c.add(...)
 			c.rool(...)
+			
 		■  Получить объект позволяющий выполнять операции с датой и временем в различной локале
 			Locale loc = new Locale(language);or
 			Locale loc = new Locale(language, country);
@@ -563,12 +575,14 @@ Dates, Numbers, and Currency (Exam Objective 3.4)
 			Calendar c = Calendar.getInstance(loc);
 			c.add(...)
 			c.rool(...)
+			
 		■  Получить объект позволяющий выполнять операции с датой и временем в различной локале и применить форматировый вывод в разных стилях
 			Calendar c = Calendar.getInstance();
 			Locale loc = new Locale(...);
 			Date d = c.getTime();
 			DateFormat df = DateFormat.getDateInstance(style, loc);
 			String s = df.format(d);
+			
 		■  Получить объект позволяющий выполнять форматирование цифр и валют в различных локалях
 			Locale loc = new Locale(...);
 			NumberFormat nf = NumberFormat.getInstance(loc);
@@ -593,9 +607,9 @@ Dates, Numbers, and Currency (Exam Objective 3.4)
 		Date d4 = c.getTime();
 		System.out.println("new date " + d4.toString() ); //new date Fri Jul 08 19:46:40 MDT 2001
 	
-	* DateFormat - абстрактный с 
+	* DateFormat - абстрактный класс со следущими статическими инициализаторами
 		DateFormat.getInstance();                      //9/8/01 7:46 PM
-		DateFormat.getDateInstance();                  //Sep 8, 2001
+		DateFormat.getDateInstance();                  //Sep 8, 2001 По умолчанию используется MEDIUM
 		DateFormat.getDateInstance(DateFormat.SHORT);  //9/8/01
 		DateFormat.getDateInstance(DateFormat.MEDIUM); //Sep 8, 2001
 		DateFormat.getDateInstance(DateFormat.LONG);   //September 8, 2001
@@ -616,14 +630,14 @@ Dates, Numbers, and Currency (Exam Objective 3.4)
 		System.out.println("def " + locBR.getDisplayCountry());      //Brasil
 		System.out.println("loc " + locBR.getDisplayCountry(locBR)); //Brasil
 		
-	* Класс NumberFormat абстрактный со статическими инициализаторами
+	* Класс NumberFormat абстрактный со следующими статическими инициализаторами
 		Locale locFR = new Locale("fr");
 		NumberFormat.getInstance();				//123.457
 		NumberFormat.getInstance(locFR);		//123.457
 		NumberFormat.getCurrencyInstance();		//$123.46
 		NumberFormat.getCurrencyInstance(loc);	//123,46 ?
 		
-		Вызвав format(число)	
+	* Вызов NumberFormat format(число)	
 	
 	* По умолчанию количество цифр после запятой 3
 		float f = 10.1126f;
@@ -669,15 +683,25 @@ Parsing, Tokenizing, and Formatting (Exam Objective 3.5)
 		result: yyxxxyxx
 		
 		source: yyxxxyxx
-		pattern: .*?xx
-		result: yyxxxyxx
+		pattern: .*?xx или .+?xx 
+		result: 
+			'yyxx'
+			'xyxx'
+		
+		source: yyxxxyxx
+		pattern: .??xx
+		result: 
+			'yxx'
+			'yxx'
 	
 	* Ошибки компиляции
-		String pattern = "\d"; // Одиночный \\ нужно \\d
+		String pattern = "\d"; // Одиночный \ нужно \\d
 			
 	* Проверка нулевой строки происходит в regex
+		source = "aba"
 		pattern = "a?";
 		Вызов m.end()
+		
 		0 1 a
 		1 1
 		2 3 a
@@ -705,6 +729,8 @@ Tokenizing
 	*Scanner имеет следующие методы для получения данных
 		String next()
 		<Type> nextXXX() - <Type> - Boolean, Byte, Short, Integer, Double, Float, BigInteger, BigDecimal
+		
+		# Кроме char
 		
 	*Scanner имеет следующие для проверки
 		Boolean hasNext()
@@ -744,4 +770,198 @@ Tokenizing
 	* Ошибки компиляции при указании format
 		System.out.format("%d", 12.3); - ошибка компиляции
 		
+Overriding hashCode() and equals() (Objective 6.2)
+	* На экзамене попадаюся примеры на правила переопределения а не на equals
+		 public boolean equals(Boo b) { } // Compiler error
+		 
+The equals() Contract
+	* Рефлексия.
+		It is reflexive. For any reference value x, x.equals(x) should return true.
+		Car car = new Car();
+		car.equal(car);	// Должно быть true
+	
+	* Симментрия.
+		It is symmetric. For any reference values xand y, x.equals(y) should 
+			return true if and only if y.equals(x) returns true.
+		Car x = new Car();
+		Car y = new Car();
+		
+		x.equal(y);	// Должно быть true 
+		//если
+		y.equal(x);	// Должно быть true
 
+	* Транзитивность.
+		For any reference values x, y, and z, if x.equals(y) returns 
+	true and y.equals(z) returns true, then x.equals(z) must return true.
+		Car x = new Car();
+		Car y = new Car();
+		Car z = new Car();
+		
+		x.equal(y);	// Если true 
+		y.equal(z);	// Если true
+		//то
+		x.equal(z);	// Должно быть true
+
+		
+	* Консистентность.
+		 It is consistent. For any reference values xand y, multiple invocations of 
+		x.equals(y) consistently return true or consistently return false, pro-vided no information used in equals comparisons on the object is modified.
+
+		Car x = new Car();
+		Car y = new Car();
+		
+		x.equal(y);	// Должно быть true
+		x.equal(y);	// Должно быть true
+		x.equal(y);	// Должно быть true
+		x.equal(y);	// Должно быть true всегда вне зависимости от количества вызовов
+		
+	* Для не пустой ссылки x вызов x.equals(null) должно быть false
+	
+	
+Overriding hashCode()
+	* От вызова к вызову int значение hasCode() не должено меняться
+	
+	* Два эквивалентных объекта должны иметь одинаковое int значение hashCode()
+	
+	* Не обязательно у неэквивалентных объектов должено быть разное значение hasCode()
+	
+	* transient поля нежелательно использовать при формировании hashCode(): 
+		В случае десиарилизации они заполнятся значениями по умолчанию
+
+Collections (Exam Objective 6.1)
+	* Core интерфейсы:
+		■  Collection 
+		■  Set 
+		■  SortedSet
+		■  List 
+		■  Map 
+		■  SortedMap
+		■  Queue 
+		■  NavigableSet 
+		■  NavigableMap
+		 
+	* Конкректные имплементации классов
+		■  Maps:
+			HashMap
+			Hashtable
+			TreeMap
+			LinkedHashMap
+
+		■  Sets:
+			HashSet
+			LinkedHashSet
+			TreeSet
+
+		■  Lists:
+			ArrayList
+			Vector
+			LinkedList
+
+		■  Queues:
+			PriorityQueue
+			
+		■  Utilities:
+			Collections
+			Arrays
+	
+	* java.util.Collections - это утилитный класс содержащий полезные методы
+		 add(), remove(), contains(), size(), and iterator()  
+
+Ordered(Упорядоченные)
+	* ArrayList - упорядочен по индексу
+	
+	* LinkedHashSet - упорядочен порядку вставки элемента
+
+Sorted(Отсортированные)	
+	* LinkedHashSet - упорядочен порядку вставки элемента
+
+List Interface
+	* ArrayList
+		Упорядоченная по позиции индекса
+		Быстрый доступ
+		Не отсортирована
+		Реализует RandomAccess
+		+ получение элемента приблизительно константное время, быстрый обход
+		- Медленная вставка и удаление
+		не synchronized		
+	
+	* Vector
+		synchronized
+		Реализует RandomAccess
+		Остальное такое же как и у ArrayList
+	
+	* LinkedList
+		Упорядоченная по позиции индекса
+		элементы 2-ды связаны между собой
+		добавляет методы удаления из начала и конца (хороший выбор для реализации Стэка и Очереди)
+		+ быстрая вставка и удаление
+		- медленный доступ чем ArrayList
+		имплементирует Queue : peek(), poll(), and offer()
+		Реализует RandomAccess
+		Остальное такое же как и у ArrayList
+		не synchronized	
+		
+Set Interface
+	* HashSet
+		не содержит дубликатов
+		не упорядочена и не отсортирована
+		производительность доступа к данным зависит от реализации hashCode()
+		обязательное переопределение hashCode()
+		не synchronized
+	
+	* LinkedHashSet
+		упорядоченная в порядке вставки
+		2 связный список
+		обязательное переопределение hashCode()
+		производительность доступа к данным зависит от реализации hashCode()
+		не synchronized
+		
+	* TreeSet
+		1 из 2х отсортированных коллекций
+		Red-Black tree structure - отсортирована в порядке возрастания (в натуральном порядке)
+		имплементирует NavigableSet
+		Правила сортировки можно солздать свой через Comparable or Comparator
+		не synchronized
+		
+Map Interface
+	* HashMap
+		не упорядочена и не отсортирована
+		производительность доступа к данным зависит от реализации hashCode()
+		Можно вставлять null для ключа
+		Можно вставлять null для значения
+		не synchronized
+	
+	* Hashtable
+		synchronized
+		Нельзя вставлять null для ключа
+		Нельзя вставлять null для значения
+		
+	* LinkedHashMap
+		упорядоченная в порядке вставки
+		2 связный список
+		обязательное переопределение hashCode()
+		производительность доступа к данным зависит от реализации hashCode()
+		- Медленнее HashMap на вставку и удаление
+		+ быстреее итерирование
+		не synchronized
+		
+	* TreeMap
+		Red-Black tree structure - отсортирована в порядке возрастания (в натуральном порядке)
+		имплементирует NavigableSet
+		Правила сортировки можно солздать свой через Comparable or Comparator
+		не synchronized	
+	
+Queue Interface (FIFO (first-in, first-out))
+	* PriorityQueue
+		Новый начиная с Java 1.5
+		используется для организации очереди "priority-in, priority out"
+			 - элементы упорядочены или в естественном порядке или в соответсвии с Comporator
+		Упорядочевание элементов представляет их приоритет
+		
+	*Таблица на странице 565
+
+Using the Collections Framework (Objectives 6.3 and 6.5)
+	* в ArrayList есть метод удаления по значению который удаляет элемент с наименьшим индексом
+	
+		
+	
