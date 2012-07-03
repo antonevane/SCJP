@@ -9,14 +9,15 @@ public class Regex {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String source = "q 1 22 _z";
-		Pattern pattern = Pattern.compile("\\d+");
+		String source = "";
+		Pattern pattern = Pattern.compile("a?");
 
 		Matcher matcher = pattern.matcher(source);
 
 		while (matcher.find()) {
 			System.out.print("'" + matcher.group() + "'\t :");
-			System.out.print(matcher.start() + "\n");
+			System.out.print(matcher.start() + " ");
+			System.out.print(matcher.end() + "\n");
 		}
 	}
 

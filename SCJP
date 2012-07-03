@@ -639,6 +639,12 @@ Dates, Numbers, and Currency (Exam Objective 3.4)
 		fn.parse("1234.567") //Выводит 1234
 		
 Parsing, Tokenizing, and Formatting (Exam Objective 3.5)
+	0[xX]([0-9a-fA-F])+ - поиск всех 16ти ричных 
+	
+	* Необходимые импорты
+		java.util.regex.Pattern
+		java.util.regex.Matcher
+	
 	* Патерны Regex
 		\d - цифры
 		\s - пробелы
@@ -647,12 +653,95 @@ Parsing, Tokenizing, and Formatting (Exam Objective 3.5)
 		+ 1 или более
 		* - 0 или более
 		? - 0 или 1
+		^ - отрицание [^abc] - кроме a b c
+		. - любой сомвол
+		*? , ??, +? - работают для всего выражения с права на лево
+		
 	
 	* Mathcher matcher = pattern.matcher() - получение matcher
 		matcher.find() - осуществляет поиск
 		matcher.group() - возвращает искомую подстроку
 		matcher.start() - возвращает индекс искомой подстроки
+	
+	* tricky: 
+		source: yyxxxyxx
+		pattern: .*xx
+		result: yyxxxyxx
 		
+		source: yyxxxyxx
+		pattern: .*?xx
+		result: yyxxxyxx
 	
+	* Ошибки компиляции
+		String pattern = "\d"; // Одиночный \\ нужно \\d
+			
+	* Проверка нулевой строки происходит в regex
+		pattern = "a?";
+		Вызов m.end()
+		0 1 a
+		1 1
+		2 3 a
+		3 3
+		
+		Происходит в следующих случаях:
+			После последнего символа в строке
+			В начале строки
+			Между символами после найденного символа
+			В начале строки нулевой длинны
 	
+	* Поиск с помощью класса Scanner
+		Scanner s = new Scanner(System.in);
+		s.findInLine(args[0])
+		
+Tokenizing
+	* split() и Scanner
 	
+	* Scanner default delimeter is ' '
+	
+	* Scanner работает со строками, файлами, потоками
+	
+	* Токены сканера могут быть автоматически сконвертированы в примитивные типы
+	
+	*Scanner имеет следующие методы для получения данных
+		String next()
+		<Type> nextXXX() - <Type> - Boolean, Byte, Short, Integer, Double, Float, BigInteger, BigDecimal
+		
+	*Scanner имеет следующие для проверки
+		Boolean hasNext()
+		Boolean hasNextXXX()
+		
+	*Scanner может устанавливать локаль и делимитр систему счисления
+		scanner.useDelimiter(pattern)
+		scanner.useLocale(locale)
+		scanner.useRadix(radix) 
+	
+	* Маска printf
+		%[arg_index$][flags][width][.precision]conversion char
+		
+		arg_index - индекс параметра
+		flag:
+			■ "-" Left justify this argument
+			■ "+" Include a sign (+ or -) with this argument
+			■ "0" Pad this argument with zeroes
+			■ "," Use locale-specific grouping separators (i.e., the comma in 123,456)
+			■ "(" Enclose negative numbers in parentheses
+		width - минимальная длина колонки для распечатывания
+		precision - точность только для чисел с плавающей точкой
+		conversion - тип конверсии:
+			■  b boolean
+			■  c char
+			■  d integer
+			■  f floating point
+			■  s string
+		
+		int i1 = -123;
+		int i2 = 12345;
+		System.out.printf(">%1$(7d< \n", i1); 				// > (123)<
+		System.out.printf(">%0,7d< \n", i2);				// >012,345<
+		System.out.format(">%+-7d< \n", i2);				// >+12345 <
+		System.out.printf(">%2$b + %1$5d< \n", i1, false);	// >false + -123<
+		
+	* Ошибки компиляции при указании format
+		System.out.format("%d", 12.3); - ошибка компиляции
+		
+
