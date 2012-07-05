@@ -1100,11 +1100,37 @@ Navigating (Searching) TreeSets and TreeMaps
 		
 		{a=ant, b=bat, d=dog, f=fish, h=horse, r=raccoon} {b=bat, d=dog, f=fish}
 	
-		■  headSet(e, b*) 		Returns a subset ending at element eand exclusiveof e
-		■  headMap(k, b*) 		Returns a submap ending at key kand exclusiveof key k
-		■  tailSet(e, b*) 		Returns a subset starting at and inclusiveof element e
-		■  tailMap(k, b*) 		Returns a submap starting at and inclusiveof key k
+	* Если в submap положить то что выходит за границу выкинется Exception = java.lang.IllegalArgumentException: key out of range
+		
+		■  headSet(e, b*) 		Returns a subset ending at element eand exclusive of e
+		■  headMap(k, b*) 		Returns a submap ending at key kand exclusive of key k
+		■  tailSet(e, b*) 		Returns a subset starting at and inclusive of element e
+		■  tailMap(k, b*) 		Returns a submap starting at and inclusive of key k
 		■  subSet(s, b*, e, b*) Returns a subset starting at element sand ending just before element e
-		■  subMap(s, b*, e, b*) Returns a submap starting at key sand ending just before key s	
+		■  subMap(s, b*, e, b*) Returns a submap starting at key sand ending just before key s
+		
+		Если не используется boolean то возвращается SortedSet/SortedMap
+		Если используется boolean то возвращается NavigableSet/NavigableMap	
+		
+	* SortedMap/SortedSet не имеют pollFirst***() и pollLast***()
+	
+	* Если вставляется в subMap то это добавляется и в основной мап так как это ссылка на тотже мап
+	
+	* Типичная ситуация для экзамена когда вызывается на subMap или map - pollFirst*:
+		 ■  удаляется для обоих если совпадают ключи
 		 
+		 {b=bat, d=dog, f=fish, h=horse, r=raccoon} {b=bat, d=dog, f=fish}
+		 
+		 map.pollFirstEntry();
+		 
+		 {d=dog, f=fish, h=horse, r=raccoon} {d=dog, f=fish}
+		 
+		 ■  не удаляется для обоих если не совпадают ключи
+		 	{a=ant, b=bat, d=dog, f=fish, h=horse, r=raccoon} {b=bat, d=dog, f=fish}
+		 	
+		 	map.pollFirstEntry();
+		 	
+		 	{b=bat, d=dog, f=fish, h=horse, r=raccoon} {b=bat, d=dog, f=fish}
+	
+	
 	
