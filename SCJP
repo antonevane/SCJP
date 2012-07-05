@@ -963,5 +963,148 @@ Queue Interface (FIFO (first-in, first-out))
 Using the Collections Framework (Objectives 6.3 and 6.5)
 	* в ArrayList есть метод удаления по значению который удаляет элемент с наименьшим индексом
 	
+	* Сортировка для List<String> stuff; Collections.sort(stuff);
+	
+	* Если поместить в List собственный объект без добавления Comparable то будет ошибка
+	
+	* String реализует Comparable<String>
+	
+	* Comparable interface используется Collections.sort() и java.util.Arrays.sort() для сортировки коллекци и массивов
+	
+	* Для реализации Comparable нужно реализовать метод compareTo() соответсвующий следующим характеристикам:
+		■ negative 		If thisObject < anotherObject
+		■ zero 			If thisObject == anotherObject
+		■ positive 		If thisObject > anotherObject
+	
+	* Comparable<Тип>
+		obj1.compareTo(obj2)
 		
+	* Comparable применяется к текущему классу
+	
+	* Comparable предполагает только 1 вид сортировки
+	
+	* Имплементирую String, Wrapper classes, Date, Calendar....
+	
+	* Интерфейс Comparator<тип> используется для организации любой сортировки, содержин метод 
+		int compare(тип объект1, тип объект2)
+	
+	* В Collections есть перегруженный метод sort() принимающий как 2й параметр Comparator
+		Collections.sort(list, ownComparator)
+		
+	* Comparator отдельный класс
+	
+	* Объекты разных классов не могут быть отсортированы
+	
+	* Comparator предполагает только n вид сортировки
+	
+	* Класс Arrays содержит
+		■  Arrays.sort(arrayToSort)
+		■  Arrays.sort(arrayToSort, Comparator)		
+	
+Searching Arrays and Collections
+	* Поиск осуществляется с помощью binarySearch()
+		binarySearch(<массив/коллекциa>, элемент для поиска)
+		binarySearch(<массив/коллекциa>, элемент для поиска, comporator)
+	
+	* успешный поиск возвращает индекс элемента (0 тоже индекс)
+	
+	* Неуспешный возвращает так называемую insertion point = (-(insertion point) -1)
+	
+	* Коллекция или массив должны быть отсортированы перед поиском
+	
+	* Если не отсортировать то поиск будет не предсказуемый
+	
+	* Если массив или коллеция отсортированы в естественном порядке то и поиск будет осуществляться в естественном порядке
+		(Обычно это достигается вызовом метода без компоратора)
+	
+	* Если коллеция была отсортирована компоратором то и поиск должен осуществляться с этим же компоратором
+	
+	* Компаратор не может быть использован при сортировки простых типов
+	
+	* На экзамене при решении вопросов на сортировки есть 2 засадных момента:
+		■  Поиск по массиву/коллекции которые не были отсортированы
+		
+		■  Использовании компоратора только или на сортировке или на поиске но не вместе
+	
+	* Arrays.asList(Object ...) 
+	
+	* если менять значения в листе или массиве они изменятся в обоих
+	
+	* list.toArray() - может возвращать либо Object [] либо Тип []
+	
+	* Iterator вызывается у коллекций list.iterator()
+	
+	* hasNext() говорит о том есть ли еще элемент
+	
+	* только next() передвигает итератор
+	
+	* В Set уникальные элементы
+	
+	* если через boolean add() добавить дублика то результатом вернется false
+	
+	* HashSet как правило очень быстрый так как он использует hashCode()
+	
+	* TreeSet это Set где элементы отсортированы
+	
+	* При использовании TreeSet все элементы должны быть одного типа если нет то будет ClassCastException в runtime
+	
+	* Чем уникальнее hashCode() тем быстрее Map
+	
+	* В Map hashCode() - используется для поиска корзины
+			equals() - используется для поиска значения
+			
+Navigating (Searching) TreeSets and TreeMaps
+	* java.util.NavigableSet
+	 	lower()  	return less
+	 	floor()  	return less or equal
+	 	higher() 	return high 
+	 	ceiling() 	return high or equal
+	 
+	 * java.util.NavigableMap
+	 	lowerKey()  	return less
+	 	floorKey()  	return less or equal
+	 	higherKey() 	return high 
+	 	ceilingKey() 	return high or equal
+	
+	* Pool значит retrive and remove
+	
+	* TreeSet
+		pollFirst()	- получить и удалить первый элемент
+		pollLast()	- получить и удалить последний элемент
+	
+	* TreeMap
+		pollFirstEntry()	- получить и удалить первую пару ключ-значение
+		pollLastEntry()		- получить и удалить последнюю пару ключ-значение
+		
+	* TreeSet.descendingSet(), TreeMap.descendingMap() - вернуть коллекцию в обратном порядке
+	
+	* Обзорная таблица всех методов для Navigation p. 588
+	
+	* Backed Collections
+		TreeMap<String, String> map = new TreeMap<String, String>();
+		map.put("a", "ant"); map.put("d", "dog"); map.put("h", "horse");
+		
+		SortedMap<String, String> submap;
+		submap = map.subMap("b", "g");					// #1 create a backed collection
+		System.out.println(map + " " + submap);			// #2 show contents
+		
+		map.put("b", "bat");							// #3 add to original
+		submap.put("f", "fish");						// #4 add to copy
+		
+		map.put("r", "raccoon");						// #5 add to original - out of range
+		
+		// submap.put("p", "pig");						// #6 add to copy - out of range
+		System.out.println(map + " " + submap);			// #7 show final contents
+		
+		{a=ant, d=dog, h=horse} {d=dog}
+		
+		{a=ant, b=bat, d=dog, f=fish, h=horse, r=raccoon} {b=bat, d=dog, f=fish}
+	
+		■  headSet(e, b*) 		Returns a subset ending at element eand exclusiveof e
+		■  headMap(k, b*) 		Returns a submap ending at key kand exclusiveof key k
+		■  tailSet(e, b*) 		Returns a subset starting at and inclusiveof element e
+		■  tailMap(k, b*) 		Returns a submap starting at and inclusiveof key k
+		■  subSet(s, b*, e, b*) Returns a subset starting at element sand ending just before element e
+		■  subMap(s, b*, e, b*) Returns a submap starting at key sand ending just before key s	
+		 
 	

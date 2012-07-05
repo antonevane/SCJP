@@ -1,6 +1,7 @@
 package ru.antonevane.ch7;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class CollectionFramework {
@@ -27,6 +28,10 @@ public class CollectionFramework {
 		for (String string : list) {
 			System.out.println(string + " : " + idx);
 			idx++;
+		}
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			String string = (String) iterator.next();
+			
 		}
 
 	}
