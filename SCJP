@@ -1026,6 +1026,10 @@ Searching Arrays and Collections
 		
 		■  Использовании компоратора только или на сортировке или на поиске но не вместе
 	
+	* Collection содержит методы возвращающие компратор
+		■  static Comparator reverseOrder()				- возвращает компаратор который сортирует в обратном порядке
+		■  static Comparator reverseOrder(Comparator)	- возвращает компаратор который сортирует в обратном порядке
+	
 	* Arrays.asList(Object ...) 
 	
 	* если менять значения в листе или массиве они изменятся в обоих
@@ -1040,7 +1044,11 @@ Searching Arrays and Collections
 	
 	* В Set уникальные элементы
 	
-	* если через boolean add() добавить дублика то результатом вернется false
+	* если в Set через: boolean add() добавить дублика то результатом вернется false
+	
+	* Set remove(object) - метод для удаления элемента
+	
+	* Set имеет toArray()
 	
 	* HashSet как правило очень быстрый так как он использует hashCode()
 	
@@ -1132,5 +1140,17 @@ Navigating (Searching) TreeSets and TreeMaps
 		 	
 		 	{b=bat, d=dog, f=fish, h=horse, r=raccoon} {b=bat, d=dog, f=fish}
 	
+	* PriorityQueue - очередь с заданным приоритетом имеет конструкторы FIRST INPUT FIRST OUT
+		■  PriorityQueue<E>(Collection<E> collection)
+		■  PriorityQueue<E>(SortedSet<E> set)
+		■  PriorityQueue<E>(PriorityQueue<E> set)
+		■  PriorityQueue<E>(int initialCapacity)
+		■  PriorityQueue<E>(int initialCapacity, Comparator<E>) - этим конструктором меняется приоритет
 	
-	
+	* PriorityQueue - очередь с заданным приоритетом имеет следующие методы
+		■  peek()		возвращает первый элемент
+		■  poll()		возвращает первый элемент и удаляет его
+		■  offer()		добавляет элемент в очередь
+		■  element()	возвращает но не удаляет элемент в первый элемент очереди
+		
+		
