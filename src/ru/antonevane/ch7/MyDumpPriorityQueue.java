@@ -11,18 +11,18 @@ public class MyDumpPriorityQueue {
 		PriorityQueue<String> pq = new PriorityQueue<String>();
 		pq.add("2");
 		pq.add("4");
-		
-		System.out.println("\nqueue:" + pq);
+		System.out.println("##############");
 
 		System.out.print(pq.peek() + " ");
-		System.out.print(pq.peek() + " ");
-		pq.offer("1");
+		pq.add("1");
 		System.out.println("\nqueue:" + pq);
 		pq.add("3");
 		System.out.println("\nqueue:" + pq);
 		pq.remove("1");
 		System.out.println("\nqueue:" + pq);
 		System.out.print(pq.poll() + " ");
+		System.out.println("\nqueue:" + pq);
+		//System.out.println("Remove:" + pq.remove("2"));
 		if (pq.remove("2"))
 			System.out.print(pq.poll() + " ");
 		System.out.println(pq.poll() + " " + pq.peek());
