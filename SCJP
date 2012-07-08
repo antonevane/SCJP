@@ -1125,12 +1125,12 @@ Navigating (Searching) TreeSets and TreeMaps
 	
 	* Если в submap положить то что выходит за границу выкинется Exception = java.lang.IllegalArgumentException: key out of range
 		
-		■  headSet(e, b*) 		Returns a subset ending at element eand exclusive of e
-		■  headMap(k, b*) 		Returns a submap ending at key kand exclusive of key k
+		■  headSet(e, b*) 		Returns a subset ending at element e and exclusive of e
+		■  headMap(k, b*) 		Returns a submap ending at key k and exclusive of key k
 		■  tailSet(e, b*) 		Returns a subset starting at and inclusive of element e
 		■  tailMap(k, b*) 		Returns a submap starting at and inclusive of key k
-		■  subSet(s, b*, e, b*) Returns a subset starting at element sand ending just before element e
-		■  subMap(s, b*, e, b*) Returns a submap starting at key sand ending just before key s
+		■  subSet(s, b*, e, b*) Returns a subset starting at element s and ending just before element e
+		■  subMap(s, b*, e, b*) Returns a submap starting at key s and ending just before key s
 		
 		Если не используется boolean то возвращается SortedSet/SortedMap
 		Если используется boolean то возвращается NavigableSet/NavigableMap	

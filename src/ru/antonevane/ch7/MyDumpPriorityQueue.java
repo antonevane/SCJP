@@ -12,15 +12,16 @@ public class MyDumpPriorityQueue {
 		pq.add("2");
 		pq.add("4");
 		
-		System.out.println(pq);
+		System.out.println("\nqueue:" + pq);
 
 		System.out.print(pq.peek() + " ");
+		System.out.print(pq.peek() + " ");
 		pq.offer("1");
-		System.out.println(pq);
+		System.out.println("\nqueue:" + pq);
 		pq.add("3");
-		System.out.println(pq);
+		System.out.println("\nqueue:" + pq);
 		pq.remove("1");
-		System.out.println(pq);
+		System.out.println("\nqueue:" + pq);
 		System.out.print(pq.poll() + " ");
 		if (pq.remove("2"))
 			System.out.print(pq.poll() + " ");
