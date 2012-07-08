@@ -1280,7 +1280,113 @@ Generic Types (Objectives 6.3 and 6.4)
 		
 	* class X { public <X> X(X x) { } } - это все круто
 	
+Inner Classes
+	* Inner class компилируется в отдельный class файл с <именем родителя>$<имя inner класса>
 	
-  	
+	* Inner class не может иметь статических методов и переменных, переменные должны быть final или сам Inner class должен быть static
+	
+	* Inner class имеет доступ к private переменным класса родителя
+	
+	* Инстанцирование должно производиться после инициализации внешнего класса
+	
+	* Инстанцирование внутреннего класса вне внешего имеет следующий синтаксис
+		InnerClasses ic = new InnerClasses();
+		InnerClasses.Inner in = ic.new Inner();
+		InnerClasses.Inner in = ic.     new Inner(); // All ok
+		
+	* this ссылается на inner класс
+	
+	* для ссылки на внешний класс используется <имя_внешнего_класса>.this
+		MyOuter.this
+	
+	* Модификаторы доступа
+		■ final
+		■ abstract
+		■ public
+		■ private
+		■ protected
+		■ static—but static turns it into a static nested class not an inner class 
+		■ strictfp
+
+Method-Local Inner Classes	
+	* В методе можно декларировать inner класс, но извне его использовать нельзя только там
+	
+	* Inner классы не могут использовать локальных переменных - это приводит к ошибке компиляции
+		public void innerWiredDecalre() {
+			int a = 10;
+			class Inner2 {
+				private void go(){
+					System.out.println(a); // ошибка компиляции
+				}
+			}
+		}
+	
+	* Inner классы в методах не могут быть private, public, protected, transient, static
+	
+	* Класс в методе может помечен или abstract или final
+	
+	* Inner класс в статическом методе работает по тем же правилам что и статические члены: не может обращаться к нестатическим переменным
+		private Inner ic = new Inner();
+		public static void innerWiredDecalre() {
+			final int a = 10;
+			class Inner2 {
+				private void go() {
+					System.out.println(ic); // Ошибка компиляции
+				}
+			}
+		}
+	
+Anonymous Inner Classes
+	* Анонимный класс как бы наследуется от своего суперкласса
+	
+	* Анонимный класс обязательно должен иметь в обяъявлении <имя_класса>() {};
+	
+	* Анонимный класс обязательно должен заканчиваться ";" иначе это ошибка 
+	
+	* К анонимному классу придъявляются все теже принципы на переопределение и на полиморфизм
+	
+	* Созданный метод в анонимном классе не может быть вызван извне класса
+	
+	* Создание ананимного класса из интерфейса работает
+	
+	* Анонимный класс можно создать прямо в методе
+		class MyWonderfulClass {
+			void go() {
+			  Bar b = new Bar();
+			  b.doStuff(new Foo() {
+		    	public void foof() {
+		      		System.out.println("foofy");
+		    		} // end foof method
+		  		}); // end inner class def, arg, and b.doStuff stmt.
+			} // end go()
+		 } // end class
+ 
+		 interface Foo {
+		   void foof();
+		 }
+			 class Bar {
+		   void doStuff(Foo f) { }
+		 } 
+	
+  	* В вызове метода обязательно должно быть }):
+		} - закрывает анонимный класс
+		) - закрывает вызов метода
+		; - закрывает выражение
+		
+Static Nested Classes
+	* static inner class 
+		class BigOuter {
+			static class Nested { }
+		}
+		
+	* это значит к нему есть доступ как статическому члену без ссылки на внешний класс
+	
+	* Инстанцирование static inner class: BigOuter.Nest n = new BigOuter.Nest();   // both class names
+	
+	* На экзамене самая распространенная проблема это использование стического внутреннего класса с нестатическими переменными
+	
+	
+	
+
   	
 	
