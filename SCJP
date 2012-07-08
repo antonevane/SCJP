@@ -2,6 +2,21 @@ Arrays
 	* У массивов length это свойство
 		String[] x = new String[3];
 		System.out.println( x.length() ); // compiler error
+		
+	* ArrayStoreException кидается когда в массив передается объект не того типа, в основном это можно получить в случае полиморфизма
+		public class PolymorphicArray {
+		public static void main(String[] args) {
+			arrayStoreException();
+		}
+
+		public static void arrayStoreException() {
+			Animal[] catArr = new Cat[1];
+			catArr[0] = new Dog();
+		}}
+		
+		abstract class Animal {}
+		class Dog extends Animal {}
+		class Cat extends Animal {}
 	
 Boxing
 	* Boolean, Byte, Character from \u0000 to \u007f (127), Short and Integer from -128 to 127 They are be =
@@ -1153,4 +1168,119 @@ Navigating (Searching) TreeSets and TreeMaps
 		■  offer()		добавляет элемент в очередь
 		■  element()	возвращает но не удаляет элемент в первый элемент очереди
 		
+Generic Types (Objectives 6.3 and 6.4)
+	* На экзамене могут быть вопросы спрашивающие про Warnings
+	
+	* cast не нужен для Generics
+	
+	* javac -Xlint:unchecked - генерация warning где ошибка при компиляции
+	
+	* не Generic коллекция всегда возвращает Object и никакого boxing unboxing  не проиходит
+		List test = new ArrayList();	
+		test.add(43);
+		int x = (Integer)test.get(0);    // you must cast !!
 		
+		List<Integer> test2 = new ArrayList<Integer>();
+		test2.add(343);
+		int x2 = test2.get(0);           // cast not necessary
+	
+	* обьявленному Generic типу должен присваиваться тот же самый тип polymorhism не работает
+		List<Object> myList = new ArrayList<JButton>();  // NO!
+  		List<Number> numbers = new ArrayList<Integer>(); // NO!
+  		// remember that Integer is a subtype of Number
+	
+		// but there are fine
+		List<JButton> myList = new ArrayList<JButton>(); // yes
+  		List<Object> myList = new ArrayList<Object>();   // yes
+  		List<Integer> myList = new ArrayList<Integer>(); // yes
+	
+	* Правила полиморфизма применяется только к базовым типам, а не к Generic
+	 Т.е. List -> ArrayList
+	 	List<JButton> myList = new ArrayList<JButton>();
+	 	
+	 * Для массивов polymorphism работает
+	 	import java.util.*;
+  		
+  		class Parent { }
+  		class Child extends Parent { }
+  
+  		public class TestPoly {
+      		public static void main(String[] args) {
+          		Parent[] myArray = new Child[3];  // yes
+			} 
+		}
+
+	* ? extends всегда и для интерфейсов и для классов
+	
+	* Без wildcard ? создание нового элемента в коллекции работает
+		public class PolymorphicGeneric {
+		public static void main(String[] args) {
+			PolymorphicGeneric polymorphicGeneric = new PolymorphicGeneric();
+			
+			List<Cat> cats = new ArrayList<Cat>();
+			cats.add(new Cat());
+			polymorphicGeneric.addAnimal(cats); // This is now OK
+		}
+	
+		public void addAnimal(List<? extends Animal> animals) { // Yes wildcard
+			animals.add(new Dog()); // This is broken ??? WTF
+		}}
+	
+		abstract class Animal {}
+		class Dog extends Animal {}
+		class Cat extends Animal {}
+		
+		//Но
+		public class PolymorphicGeneric {
+		public static void main(String[] args) {
+			PolymorphicGeneric polymorphicGeneric = new PolymorphicGeneric();
+			
+			List<Cat> cats = new ArrayList<Cat>();
+			cats.add(new Cat());
+			polymorphicGeneric.addAnimal(cats); // Error
+		}
+	
+		public void addAnimal(List<? extends Animal> animals) { // No wildcard
+			animals.add(new Dog()); // still OK as always
+		}}
+	
+		abstract class Animal {}
+		class Dog extends Animal {}
+		class Cat extends Animal {}		
+	
+	* есть еще wildcard super 
+	  Если добавить public void addAnimal(List<? super Dog> animals) то все будет ок
+	  Данная строчка позволяет добавлять супер типы в иерархии, ну и собственно сами типы
+	   	List<Animal> newanimal - ОК
+	   	animals.add(new Dog()); // OK
+	
+	* List<?> list - позволяет передавать в метод list любых элементов
+		List<JButton> buttons = new ArrayList<Jbutton>(); -  работает
+		// но
+		
+		void doInsert(List<?> list) { //Won't compile
+      	 list.add(new Dog());
+    	}
+	
+	* List<?> foo = new ArrayList<? extends Animal>(); - ошибка компиляции
+		Нельзя использовать wildcard в создании, только в присвоении
+		
+	* List<? super Animal> dList = new ArrayList<Dog>(); - ошибка компиляции
+	 Тип должен быть Animal или выше
+	 
+	* В Generic объявлении метода - необходимо сначало объявить тип, а потом указать возвращаемое значение
+  		public <T> void makeArrayList(T t) {} // ОК type is defined righ
+  		
+  		public void <T> makeArrayList(T t) {} // type is defined wrong - after return type
+  		
+  	* Объявление типа в конструкторе реально 
+  		public class Radio {
+			public <T> Radio(T t) { }  // legal constructor
+		}
+		
+	* class X { public <X> X(X x) { } } - это все круто
+	
+	
+  	
+  	
+	
