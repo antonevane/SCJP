@@ -1385,8 +1385,129 @@ Static Nested Classes
 	
 	* На экзамене самая распространенная проблема это использование стического внутреннего класса с нестатическими переменными
 	
+Defining, Instantiating, and Starting Threads (Objective 4.1)
+	* Для экзамена необходимо знать как миниму 4 метода:
+		■  start()
+  		■  yield()
+  		■  sleep()
+  		■  run()
+  		
+  	* Поток можно заставить выполняться 2мя способами:
+  		■ Extend the java.lang.Thread class.
+		■ Implement the Runnable interface.
+		
+	* При наследовании Thread нужно переопределить метод run() - плохо при проектировании так как Java поддерживает только единственное наследование 
 	
-	
+	* Метод run можно переопределять, но это не вызовется в новом потоке с новым методом
+		class MyThread extends Thread {
+			public void run() {
+				System.out.println("Important job running in MyThread");
+			}
+			public void run(String s) {
+				System.out.println("String in run is " + s);
+			} }
+			
+	* Если класс унаследовал Thread то инстанцирование очень простое
+		MyThread t = new MyThread()
+		
+	* Если класс имплементирует Runnable то инстанцирование будет:
+		MyRunnable r = new MyRunnable(); 	// Сначала экземпляр собственного класса
+		Thread t = new Thread(r);			// Затем создать экземпляр класса Thread передав ему свой runnable код
 
+	* В случае Runnable объект можно передать многим потокам, тем самым они будут выполнять одну и туже работу
+		public class TestThreads {
+		     public static void main (String [] args) {
+		       MyRunnable r = new MyRunnable();
+		       Thread foo = new Thread(r);
+		       Thread bar = new Thread(r);
+		       Thread bat = new Thread(r);
+		} }
+	
+	* Класс Thread сам по себе имплементирует Runnable
+		Thread t = new Thread(new MyThread()); // такая запись легальна
+		
+	* Класс Thread имеет следующие конструкторы
+		■ Thread()
+		■ Thread(Runnable target)
+		■ Thread(Runnable target, String name) 
+		■ Thread(String name)
+		
+	* До запуска Thread находится в состоянии new
+	
+	* После запуска start() поток переходит в состояние alive
+	
+	* После завершения run() поток переходит в death
+	
+	* Метод isAlive() предназначен для того чтобы узнать что поток был запущен но не завершен метод run()
+	
+	* Запуск потока t.start()
+	
+	* После вызова метода  start() происходит следующее:
+		■ Начинается выполнение нового потока с новым call стеком
+		■ Поток переходит из состояния new в состояние runnable
+		■ Когда поток получает возможность выполнится он выполняет target метод run()
+		
+	* На экзамене встречается следующий код
+		Thread t = new Thread();
+		t.run();  // Legal, but does not start a new thread
+		
+	* Поток имеет имя которое можнополучить вызвав метод getName() у экземпляра, но экземпляр получить можно вызвав статический метод
+		Thread.currentThread()
+		Потоку можно установить имя t.setName("Fred");
+		
+		class NameRunnable implements Runnable {
+			public void run() {
+				System.out.println("NameRunnable running");
+	         	System.out.println("Run by " + Thread.currentThread().getName());
+
+			} }
+		public class NameThread {
+			public static void main (String [] args) {
+				NameRunnable nr = new NameRunnable();
+				Thread t = new Thread(nr);
+				t.setName("Fred");
+				t.start();
+			} }
+		
+		// Вывод NameRunnable running
+  		// Run by Fred
   	
+  	* Если потоку не задать имя он все равно его получит вида 
+  		Thread-0
+  		
+  	* Если вызвать имя потока в методе main то получим:
+  		public class NameThreadTwo {
+	     public static void main (String [] args) {
+	       System.out.println("thread is " + Thread.currentThread().getName());
+		} }
+		// thread is main
+	
+	* Если запустить несколько потоков в цикле порядок выполнения не гарантирован
+	
+	* start() нельзя вызвать повторно породит RuntimeException: IllegalThreadStateException
+	
+	* у потока можно вызвать getld() - вернет положительный long 
+	
+The Thread Scheduler
+	* scheduler часть JVM -он управляет состоянием потока
+	
+	* scheduler решает какой доступный поток выполнить - доступный поток это поток который находится в состоянии runnable
+	
+	* Методы класса java.lang.Thread
+		public static void sleep(long millis) throws InterruptedException 
+		public static void yield()
+		public final void join() throws InterruptedException
+		public final void setPriority(int newPriority)
+		
+	* InterruptedException - это checked Exception и оно должно отлавливаться
+	
+	* Методы класса java.lang.Object
+		public final void wait() throws InterruptedException 
+		public final void notify()
+		public final void notifyAll()
+
+Thread States and Transitions (Objective 4.2)
+	
+	
+	
 	
