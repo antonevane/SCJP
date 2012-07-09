@@ -1507,6 +1507,196 @@ The Thread Scheduler
 		public final void notifyAll()
 
 Thread States and Transitions (Objective 4.2)
+	* Поток может быть в 1м из 5ти состояний:
+		■ New
+			Состояния в котором прибывает поток после создания instance
+		■ Runnable
+			Состояние в котором поток готов к запуску и sheduler не выбрал его чтобы запустить. Поток входит в это состояние после вызова start()
+			Поток так же может вернуться в это состояние после запуска или после sleeping, blocking, waiting
+		■ Running
+			Это состояние выполнение. Оно устанавливает после того как sheduler выбирает поток, из runnable пула потоков,
+		■ Waiting/Blocking/Sleeping
+			Это состояние когда поток isAlive() = true, но в данный момент не может быть выполнен. 
+			В данном состоянии поток может вернуться в runnable состояние по наступления определенного события.
+			Поток может быть блокирован ожидая завершения операции I/O. Поток может быть усыплен если в коде будет вызвана задержка.
+			Или поток может быть в ожидании если код выполняющийся в потоке поставил его в ожидание.
+			Важно что один поток не говорит заблокироваться другому. 
+			Если есть ссылка на поток и будет вызван
+				t.sleep();   or     t.yield()
+			то это никак не повлияет на поток, только статические методы делаю это
+		■ Dead
+			Это состояние в которое поток переходит по окончанию метода run().
+			Его нельзя больше запускать, но ссылка на него еще будет
+	
+Sleeping
+	* статический метод в классе Thread sleep()
+	
+	* кидает checked Exception - InterruptedException
+	
+	* Если случится остановка во время того как поток sleeping то выбросится исключение InterruptedException
+
+Thread Priorities and yield( )
+	* приоритет потока обычно от 1 до 10
+	
+	* По умолчанию поток получает приоритет выполняемого потока в котором он создан
+		public class TestThreads {
+		    public static void main (String [] args) {
+		      MyThread t = new MyThread();
+		    }
+		}
+		// Приритет такой же как main
+	
+	* Установка приоритета
+		FooRunnable r = new FooRunnable();
+		Thread t = new Thread(r);
+		t.setPriority(8);
+		t.start();
+	
+	* JVM не меняет приоритета потока
+	
+	* Приоритет по умолчанию 5
+		Thread.MIN_PRIORITY  (1)
+		Thread.NORM_PRIORITY  (5)
+		Thread.MAX_PRIORITY  (10)
+
+	* Метод static Thread.yield() - метод не гарантировано переводит поток из runnig в runnable и дает потом одинакового с ним приоритета окно для работы
+		Он никогда не переводит поток в waiting/sleeping/blocking
+		
+	* non-static join() класса Thread - позволяет одному потоку присоединяться в конец другого потока
+	
+	* Дан пример
+		Thread t = new Thread();
+  		t.start();
+  		t.join();
+  		
+  		Берет текущий поток и присоединяет его в конец того который соответсвует ссылки t.
+  		Это блокирует текущий поток от состояния перехода в runnable до того момента пока ссылка на поток жива
+  		Это значит присоедени меня в конец потока t и t должен завершиться до того как я могу запустится еще раз
+  		
+  	* Перегруженная версия th.join(1000); - говорит о том что если это заняло больше 1000 мс то прекрати ждать
+  	
+  	* Следующие сценарии выводят поток из состояния running
+  		■ метод run() заканчивается
+  		■ Вызов wait() на объекте
+  		■ поток не может получить lock на объект код которого запущен	
+  		■ thread scheduler может решить перевести поток из состояния runnign в состояния runnable чтобы дать другим шанс на запуск
+  		
+Synchronizing Code (Objective 4.3)
+	* Тейзисы о locking and synchronization:
+		■ только метод или блок кода может быть synchronized
+		■ каждый объект имеет 1 lock
+		■ не все методы в классе должны быть synchronized
+		■ если один поток вошел в synchronized  мето остальные ждут
+		■ если класс имеет синхронизованные и не синхронизованные методы то множество потоков могут попрежнему обращаться к не синхронизованным методам
+		■ если поток засыпает то он держит lock и не отпускает его
+		■ поток может захватить несколько lock на разные объекты
+		■ если поток получил lock а затем пытается вызвать тот же синхронизованный метод то ничего страшного поскольку JVM знает что lock у него
+		■ можно синхронизовывать блоки кода
+		
+	* блок синхронизации должен иметь контекст
+		 public void doStuff() {
+		      synchronized(this) {
+		          System.out.println("synchronized");
+		      }
+		}
+		
+	* static методы тоже могут быть synchronized
+	
+	* статический блок
+		public static int getCount() {
+			synchronized(MyClass.class) {
+				return count;
+			}
+		}
+		
+	* Если поток не может получить lock на объект то он отправляется в wait pool, после того как lock будет освобожден не гарантируется отдача объекта конкретному потоку
+	
+	* Когда говорят о блокировках очень важно понимать какой объект получил используется для lock:
+		■ Потоки вызывающие non static synchronized метод в том же классе блокируют друг друга если они вызываются используя один и тот же экземпляр
+		■ Потоки вызывающие static synchronized методы в том же классе всегда будут блокировать друг друга - они лочат однин и тот же класс
+		■ static synchronized метод и non static synchronized метод никогда не будут блокировать друг друга
+		■ Для блоков синхронизации нужно ориентироваться на объекткоторый используется для lock
+		
+	* Методы и статус lock
+		■ wait() отдает lock - java.lang.Object
+		■ notify() не отдает lock, но после вызова вероятнее быстрее выдет из synchonized - java.lang.Object
+		■ join() не отдает lock - java.lang.Thread
+		■ sleep() не отдает lock - java.lang.Thread
+		■ yield() не отдает lock - java.lang.Thread
+
+Thread Deadlock
+	* Пример deadlock
+
+1	public class DeadlockRisk {
+2		private static class Resource {
+3			public int value;
+4		}
+5		private Resource resourceA = new Resource();
+6		private Resource resourceB = new Resource();
+7		public int read() {
+8		  synchronized(resourceA) { // May deadlock here
+9		    synchronized(resourceB) {
+10		      return resourceB.value + resourceA.value;
+11		    }
+12		  }
+13		}
+14		public void write(int a, int b) {
+15		  synchronized(resourceB) { // May deadlock here
+16		    synchronized(resourceA) {
+17		      resourceA.value = a;
+18		      resourceB.value = b;
+19			}
+20   		  }
+21		}
+22     }
+23	}
+
+Thread Interaction (Objective 4.4)
+	* wait(), notify(), and notifyAll() - должны быть вызваны в синхронизованном контектсе.
+		Поток не может вызывать wait или notify методы на объект если не владет lock на этот объект 		
+		
+	* Пример
+1 class ThreadA {
+2	public static void main(String[] args) {
+3		ThreadB b = new ThreadB();
+4		b.start();
+5		
+6		synchronized (b) {
+7			try {
+8				System.out.println("Waiting for b to complete...");
+9				b.wait();
+10			} catch (InterruptedException e) {}
+11			System.out.println("Total is: " + b.total);
+12		}
+13	}
+14 }
+15
+16 class ThreadB extends Thread {
+17	int total;
+18	
+19	public void run() {
+20		synchronized (this) {
+21			for (int i = 0; i < 100; i++) {
+22				total += i;
+23			}
+24			notify();
+25		}
+26	}
+27 }
+
+	Для предотвращения завершения вызывается b.wait()
+	Обязательно присутсвует контекст на b
+	
+	* Если поток не владеет lock и вызывает wait() то выбрасывается unchecked Exception - IllegalMonitorStateException.
+	
+	* wait(milleseconds) - имеет еще такую форму - это значит wait отпускает lock и ждет notify заданное время затем возвращается в runnable
+	
+	* wait - сразу отпускает lock
+	
+	* notify - если вызван это не значит поток отпусти lock прямо сейчас. Если поток выполняет synchronized код - lock не отпускается пока поток не
+		выйдет из синхронизованного кода
+		
+	
 	
 	
 	
