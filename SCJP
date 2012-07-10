@@ -1620,9 +1620,9 @@ Synchronizing Code (Objective 4.3)
 	* Методы и статус lock
 		■ wait() отдает lock - java.lang.Object
 		■ notify() не отдает lock, но после вызова вероятнее быстрее выдет из synchonized - java.lang.Object
-		■ join() не отдает lock - java.lang.Thread
-		■ sleep() не отдает lock - java.lang.Thread
-		■ yield() не отдает lock - java.lang.Thread
+		■ join() throws InteruptedException не отдает lock - java.lang.Thread
+		■ static sleep() throws InteruptedException не отдает lock - java.lang.Thread
+		■ static yield() не отдает lock - java.lang.Thread
 
 Thread Deadlock
 	* Пример deadlock
@@ -1696,8 +1696,134 @@ Thread Interaction (Objective 4.4)
 	* notify - если вызван это не значит поток отпусти lock прямо сейчас. Если поток выполняет synchronized код - lock не отпускается пока поток не
 		выйдет из синхронизованного кода
 		
+	* Использование notifyAll позволяет оповестить сразу множество ждущих потоков
 	
+	* Хорошой практикой считается проверка какого либо значения в цикле прежде чем устанавливать wait()
 	
+	* notify() может вызываться thread scheduler для своихнужд
 	
+	* wait(), notify(), notifyAll() - принадлежат классу java.lang.Object
 	
+	* start(), static yield(), static sleep(), join() - принадлежат классу java.lang.Thread
 	
+	* run() - принадлежит интерфейсу Runnable
+	
+Using the javac and java Commands (Exam Objectives 7.1, 7.2, and 7.5)
+
+	* Унифицированный синтаксис javac
+		javac [options] [source files]
+		
+	* Легальные комманды
+		javac -help
+  		javac -classpath com:. -g Foo.java Bar.java // -g сгенерировать debug информацию, -classpath - путь
+  		
+  	* По умолчанию компилятор помещает скомпилированные файлы .class в туже директорию
+  	
+  	* опция -d говорит компилятору куда помещать сгенерированные .class файлы
+  		javac -d classes source/MyClass.java // поместит MyClass.class в classes/MyClass.class
+  	
+  	* Если мы имеем структуру каталогов или пакеты то опция -d создаст недостающие директории
+  		javac -d ../classes com/wickedlysmart/MyClass.java // поместит classes/com/wickedlysmart/MyClass.class
+  		
+  	* Если директория не существует то будет ошибка компиляции - No such file or directory
+  	
+  	* java команда для запуска 
+  	
+  	* Нужно помнить следующие опции
+  		■ -ea -enableassertion - разрешение assertion
+  		■ -da -disableassertion - запрещение assertion
+  		■ -cp -classpath - путь для поиска
+  		■ -D - опции
+
+	* Структура комманды java
+		java [options] class [args] // [args] и [options] необязательные
+		
+	* При вызове разрешение .class не добавляется
+		java -DmyProp=myValue MyClass x 1 // свойство myProp=myValue запускается MyClass.class и передается 2 String аргумента x и 1
+	
+  	* java.util.Properties - класс который можно использовать для доступа к свойствам системы
+		import java.util.*;
+		  public class TestProps {
+		    public static void main(String[] args) {
+		      Properties p = System.getProperties();
+		      p.setProperty("myProp", "myValue");
+		      p.list(System.out);
+		} }
+		
+		//call java -DcmdProp=cmdVal TestProps
+		// Вывод будет содержать свойства cmdProp=cmdVal и myProp=myValue
+		
+	* properties.getProperty(key) - используется для получения свойства
+		properties.getProperty(key, defaultValue) - значение по умолчанию используется если свойство не задано
+	
+	* после -D имя свойства должно идти без пробела
+	
+	* если значение свойства содержит пробелы оно должно помещаться в ""
+		java -DcmdProp="cmdVal take 2" TestProps
+
+	* метод main может декларироваться следующими способами
+		■ static public void main(String[] args)
+		■ public static void main(String... x)				//Начиная с Java 5
+		■ static public void main(String bang_a_gong[]) 
+	
+Searching for Other Classes
+	* javac и java используют один и тот же алгоритм поиска классов:
+		■ Оба имеютодинаковые списки мест для поиска классов
+		■ Оба осуществляют поиск по этому списку в одинаковом порядке
+		■ Как только находят класс поиск останавливается. Если в списке находится больше одного то выбирается первый
+		■ Первое место где смотрят это библиотеки J2SE
+		■ Второе место это директории указанные в classpaths
+		■ Classpaths - представляют собой список директорий в которых могут находится классы
+		■ Существует 2 места где classpaths могут указываться:
+			■ Classpath может указываться как environment variable операционной системы.
+				Указанный здесь classpath используется по умолчанию в независимости от того вызывается java или javac
+			■ Classpath может указываться как опция вызова коммандной строки в зависимости от команды javac или java.
+			 * Сlasspath указанный как опция в коммандной строке переопределяет classpath задекларированный в переменной ос,
+			 	но сохраняется только на время вызова
+	
+	* -classpath /com/foo/acct:/com/foo // разделитель :
+		Данный classpath - привязан к операционной системе что указывает лидирующий / в начале
+		В представленном примере директория над 2мя переменными такая как com не будет учавствовать в поиске
+		
+	* при поиске необходимо указать в classpath и сам файл для запуска и компиляции
+		
+	* точка . обозначает текущую директорию
+	
+	* /(root) или \. - абсолютный путь
+	
+	* относительный не начинается со /
+	
+JAR Files (Objective 7.5)
+	* создание jar = jar -cf MyJar.jar myApp
+	
+	* просмотр содержимого jar = jar -tf MyJar.jar myApp
+	
+	* структура jar
+		■ jar команда создает автоматически META-INF директорию
+		■ jar команда создает автоматически файл MANIFEST.MF
+		■ jar команда не помещает ни одного файла в META-INF/
+		■ структура каталогов соответсвует запакованному
+		■ java и javac используют jar как нормальную структуру папок
+		
+	* указание расширения jar обязательно
+		javac -classpath ws/myApp.jar UseStuff.java
+		
+	* отличное место для jar jre/lib/ext - если поместить туда свой jar java и javac найдут его
+	
+	* Если на экзамене встретится JAVA_HOME or $JAVA_HOME - то это означает что: эта часть абсолютного пути до директорий указанный в явном виде
+
+Using Static Imports (Exam Objective 7.1)
+	* Примеры статического импорта
+		import static java.lang.System.out;             // 1
+        import static java.lang.Integer.*;
+		public class TestStaticImport {
+			public static void main(String[] args)  {
+				out.println(MAX_VALUE);                     // 3
+				out.println(toHexString(42));               // 4
+		} }
+	
+	* Несколько правил по статическому импорту
+		■ нужно использовать import static а не static import
+		■ Нужно опасаться дублирования имен импортированных статических членов
+			Если импортировать сразу Integer и Long то произойдет ошибка компиляции пересечение имен на MAX_VALUE
+		■ Можно делать статический импорт на статические объектные ссылки, константы и методы
