@@ -1,3 +1,9 @@
+Encapsulation (Exam Objective 5.1)
+
+	*
+
+	* interface is-a Object
+
 Arrays
 	* У массивов length это свойство
 		String[] x = new String[3];
@@ -17,6 +23,18 @@ Arrays
 		abstract class Animal {}
 		class Dog extends Animal {}
 		class Cat extends Animal {}
+		
+	* D В runtime случится ArrayStoreException
+		class A{}
+		     class B extends A{}
+		     class C extends B{}
+		     class D extends C{}
+		     public class XLoad{
+		          public static void main(String args[]){
+		               A[] a=new C[1];
+		               a[0] = new B() // В runtime это C[]
+		          }
+		     }
 	
 Boxing
 	* Boolean, Byte, Character from \u0000 to \u007f (127), Short and Integer from -128 to 127 They are be =
@@ -554,7 +572,7 @@ Serialization (Exam Objective 3.3)
 	* static не сериализуются потому что принадлежат классу
 	
 Inheritance and Serialization
-	* В случае если супер класс не Serializable, а потомок да то при восстановление унаследованная часть будет переинициализирована
+	* В случае если супер класс реализует Serializable, а потомок да то при восстановление унаследованная часть будет переинициализирована
 		
 		!!!!!Конструктор запустится заново!!!
 		
@@ -565,6 +583,7 @@ Inheritance and Serialization
 			// the rest of the Dog code
 		}
 	
+	* Вызывается конструктор по умолчанию, если его нет то выбрасывается ошибка  java.io.InvalidClassException: no valid constructor
 Dates, Numbers, and Currency (Exam Objective 3.4)
 	* На экзамене необходимо понимать следующие классы
 		■  java.util.Date
@@ -1650,6 +1669,8 @@ Thread Deadlock
 21		}
 22     }
 23	}
+
+	* Одиночный поток не может входить в Deadlock
 
 Thread Interaction (Objective 4.4)
 	* wait(), notify(), and notifyAll() - должны быть вызваны в синхронизованном контектсе.
