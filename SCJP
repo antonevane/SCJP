@@ -1,10 +1,15 @@
 Encapsulation (Exam Objective 5.1)
 
-	*
+	* coupling - is the OO principle most closely associated with making sure classes know about other classes only through their APIs.
+	
+	* cohension - is the OO principle most closely associated with making sure a class is designed with a single, well-focused purpose.
 
 	* interface is-a Object
 
 Arrays
+	* инициализация анаимного массива
+		int[] z = new int [] {10,1}; 
+		
 	* У массивов length это свойство
 		String[] x = new String[3];
 		System.out.println( x.length() ); // compiler error
