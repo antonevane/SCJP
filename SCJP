@@ -36,7 +36,7 @@ Declare Classes (Exam Objective 1.1)
 		■  Модификаторы доступа: public, protected, private
 		■  Модификаторы не относящиеся к доступу: final, abstract, strictfp
 		
-	* Классу не обязательно быть public в файле т.е. может и небыть в файле public класса
+	* Классу не обязательно быть public в файле т.е. может и не быть в файле public класса
 
 Default Access
 	* Так называемый пакетный доступ
@@ -263,6 +263,9 @@ Declaring Enums
 	
 	* Но если есть конструктор то тогда ';' обязательна
 	
+	* Если enum декларируется вне класса то оно НЕ ДОЛЖЕН БЫТЬ 
+		static, final, abstract, protected, or private.
+	
 	* enum имеет метод values() - который возвращает массив перечислений
 	
 	* Конструктор enum НЕЛЬЗЯ вызывать
@@ -277,12 +280,305 @@ Declaring Enums
 		}
 	
 Encapsulation (Exam Objective 5.1)
+	* Это всегда private переменная или реже protectred
+	
+	* Доступ через API get/set
 
+Inheritance, Is-A, Has-A (Exam Objective 5.5)
+	* При наследовании наследуются все кроме public члены
+	
+	* При наследовани static и не static методы c с одним именем это ошибка
+		class B  extends A{
+			public  void getA(){} // Compiler erro
+		}
+
+		class A {
+			public static void getA(){}
+		} 
+	
+	* is - a кода один класс расширяет другой или когда иплементирует интерфейс
+	
+	* все классы is-a Object
+	
+	* interface is-a Object
+	
+	* has - a - говорит об использовании
+		public class Animal { }
+  		public class Horse extends Animal {
+     		private Halter myHalter;
+  		}
+  		
+  		// Horse has Halter
+	
+Polymorphism (Exam Objective 5.2)
+	* Ссылочная переменная может ссылаться на любой объект того типа что и задекларирована или
+		она может ссылаться на любой подтип декларируемого типа
+	
+	* Присвоение переменной возможно ели это еще и интерфейс
+		public interface Animatable {
+ 		    public void animate();
+		}
+		
+		class PlayerPiece extends GameShape implements Animatable {
+		     public void movePiece() {
+		       System.out.println("moving game piece");
+		     }
+		     public void animate() {
+		       System.out.println("animating...");
+			}
+		// more code 
+		}
+	
+		В зависимости от типа ссылочной переменной:
+			■ An Object (since any object inherits from Object)
+			■ A GameShape (since PlayerPiece extends GameShape)
+			■ A PlayerPiece (since that's what it really is)
+			■ An Animatable (since PlayerPiece implements Animatable)
+			
+		В текущем примере PlayerPiece может присвоин следующим ссылочным переменным
+			PlayerPiece player = new PlayerPiece();
+        	Object o = player;
+        	GameShape shape = player;
+        	Animatable mover = player;
+		
+	* Полиморфный вызов методов применяются только к экземплярам методов
+	
+Overriding / Overloading (Exam Objectives 1.5 and 5.4)
+	* Полиморфизм использует ссылку в высокой иерархии чтобы вызывать переопределенные методы классов
+		public class TestAnimals {
+		    public static void main (String [] args) {
+		      Animal a = new Animal();
+		      Animal b = new Horse();  //Animal ref, but a Horse object
+		      a.eat(); // Runs the Animal version of eat()
+		      b.eat(); // Runs the Horse version of eat()
+		    }
+		 }
+
+		class Animal {
+		    public void eat() {
+		      System.out.println("Generic Animal Eating Generically");
+		} }
+		  class Horse extends Animal {
+		    public void eat() {
+		      System.out.println("Horse eating hay, oats, "
+		                         + "and horse treats");
+		}
+		     public void buck() { }
+		}
+
+	* Если вызвать метод который не определенн ссылкой то будет ошибка компиляции
+		Animal c = new Horse();
+  		c.buck();  // Can't invoke buck(); Animal class doesn't have that method
+  		
+  	* Переопределенные методы не могут быть более закртыми чем сам метод т.е. public метод не может быть protected, private (static)
+  	
+  	* Если метод у родителя private можно объявить с такой же сигнатурой метод в подклассе так как не наследуются private методы
+  	
+  	* Если у родителя метод final то его переопределение вызовет ОШИБКУ КОМПИЛЯЦИИ
+  	
+  	* Переопределяемый метод не может быть static в одном из классов, если только не в обоих классах сделать static
+  	
+  	* Правила переопределения методов
+  		■ Аргументы методов должны в точности совпадать
+  		■ Возвращаемый тип должен быть тем же самым или подклассом
+  		■ Уровень доступа должен быть не выше чем у переопределяемого метода (Обратное работает)
+			class Animal1 {
+				protected  void eat() {
+					System.out.println("Generic Animal Eating Generically");
+				}
+			}
+			
+			class Horse1 extends Animal1 {
+				public  void eat() {
+					System.out.println("Horse eating hay, oats, " + "and horse treats");
+				}
+			
+				public void buck() {
+				}
+			}
+		■ Экземпляры методов могут переопределены только если они наследуются от суперкласса и не final private.
+		  Подкласс в другом пакете может переопределить только protected и public методы
+		■ Переопределенный метод может кидать любой unchecked (runtime) исключение (NullPointerException, ArrayIndexOutOfBoundsException)
+		■ Переопределенный метод НЕ МОЖЕТ бросать более широкое исключение или новое checked
+		■ Переопределенный метод может бросать более специализированное исключение
+		■ Нельзя переопределять final метод
+		■ Нельзя переопределять static метод
+		■ Если метод не может быть унаследован то он не может быть переопределен
+		
+	* Вызвать версию родительского класса можно через переменную super
+	
+	* В переопределенном методе может не присутствовать Exception
+		class Animal1 {
+			protected  void eat() throws Exception{
+				System.out.println("Generic Animal Eating Generically");
+		}}
+		
+		class Horse1 extends Animal1 {
+			public  void eat() {
+				System.out.println("Horse eating hay, oats, " + "and horse treats");
+		}}
+		
+	* Стоит аккуратно подходить к вызову метода с исключением оно дожно декларировать или быть в try/catch	
+		public class TestAnimals {
+			public static void main(String[] args) {
+				Animal1 a = new Animal1();
+				Horse1 b = new Horse1();
+				b.eat(); // Compiler happy
+				a.eat(); // Compiler unhappy
+			}
+		}
+	
+Overloaded Methods
+	* Правила перегрузки методов
+		■ Перегруженный метод ОБЯЗАН поменять список аргументов
+		■ Перегруженный метод может менят ь возвращаемое значение
+		■ Перегруженный метод может менять модификатор доступа
+		■ Перегруженный метод CAN декларировать расширенное исключение или новое
+		■ Метод можно перегружать как в самом классе так и в подклассах
+	
+Invoking Overloaded Methods
+	* При вызове переопределенного метода выбирается тип который соответсвует задекларированному типу, а а не объекту
+		public class OverloadCall {
+			public void run(C1 c) {System.out.println("C");}
+			public void run(BZ b) {System.out.println("B");}
+		
+			public static void main(String[] args) {
+				BZ b = new BZ();
+				C1 c = new C1();
+				C1 cAsb = new BZ();
+		
+				OverloadCall o = new OverloadCall();
+				o.run(b);    // B
+				o.run(c); 	 // C
+				o.run(cAsb); // ВЫВОД С - ЗАПОМНИ ОПРЕДЕЛЯЕТСЯ ПЕРЕМЕННОЙ А НЕ RUNTIME ОБЪЕКТОМ
+		}}
+		
+		class C1 {}
+		
+		class BZ extends C1 {}
+
+Reference Variable Casting (Objective 5.2)
+	* Чтобы сделать компилятор счастливее можно применять Cast ссылок
+		BZ zb = (BZ) c; // downcast
+		// В случае если c в Runtime = BZ то все ок иначе ClassCastException
+	
+	* Cast ДОЛЖЕН применяться только к одинаковой иерархии
+		C1 z = (C1) (new String("")); // ошибка компиляции String нельзя привести к C1
+
+Implementing an Interface (Exam Objective 1.2)
+	* При имплементации интерфейса методы в классе ТОЛЬКО public
+	
+	* Такие же правила как при и переопределении
+	
+	* Такие же правила что и для абстрактныйх классов
+
+Return Type Declarations
+	* Возвращаемое значение может быть подтипом только в Java 1.5
+		public abstract class Animal { }
+		public class Bear extends Animal { }
+		public class Test {
+			public Animal go() {
+				return new Bear();  // OK, Bear "is-a" Animal
+		} }
+	
+	* Возвращаемое значение может быть null
+		public Button doStuff() {
+			return null;
+		}
+	
+	* Массив легальный возвращаемы тип
+	
+	* В методах где возвращаемое значение примитивного типа можно возвращать тип который может быть приведен автоматически
+		public double get(){
+			char c = 'c';
+			return c;
+		}
+	
+	* В методах где возвращаемое значение примитивного типа можно возвращать приведенные типы
+		public int get(){
+			float f = 11f;
+			return (int) f;
+		}		
+
+	* Метод возвращающий void не может возвращать значение
+		public void bar() {
+			return "this is it";  // Not legal!!
+		}		
+
+	 * В методах где возвращаемый элемент объектная ссылка можно возвращать неявно приведенные типы
+		public Object getObject() {
+		     int[] nums = {1,2,3};
+		     return nums;  // Return an int array, which is still an object
+		}
+	 
+		public interface Chewable { }
+		   public class Gum implements Chewable { }
+		   public class TestChewable {
+		       // Method with an interface return type
+		       public Chewable getChewable() {
+		         return new Gum();  // Return interface implementer
+		      }
+		}
+	 
+Constructors and Instantiation (Exam Objectives 1.6, 5.3, and 5.4)
+Constructor Chaining
+	* Пусть есть такой код 
+		Horse h = new Horse();
+		
+		Создание класса вызывает следующую последовательность действий:
+			■ Вызывается конструктор Horse. Каждый конструктор вызывает конструкторсупер класса
+			■ Вызывается Animal конструктор (Animal is the superclass of Horse)
+			■ Вызывается конструктор Object
+			■ Переменные экземпляра Object принимают соответсвующие значение
+			■ Конструктор Object заканчивает
+			■ Переменные экземпляра Animal принимают соответсвующие значение
+			■ Конструктор Animal заканчивает 
+			■ Переменные экземпляра Horse принимают соответсвующие значение
+			■ Конструктор Horse заканчивает
+			
+Rules for Constructors
+	* Конструктор может использоваь любой модификатор доступа
+	
+	* Имя конструктора совпадает с именем класса
+	
+	* Конструктор НЕ ИМЕЕТ возвращаемого значения
+	
+	* Если вы не напишить конструктор в коде - конструктор по умолчанию будет добавлен
+	
+	* Если класс имеет конструктор с параметром - КОНСТРУКТОР по умолчанию не создается
+	
+	* Каждый конструктор как первое значение должен либо вызвать переопределенный конструктор либо this() либо конструктор супер класса super()
+	
+	* Если вы не напечатаете в своем конструкторе без параметров перегруженного конструктора this() или супер конструктор super() - компилятор добавит super()
+	
+	* Вызов super() может как с параметрами так и без
+	
+	* Только статические переменные переменные могут быть частью вызова super() или this()
+	
+	* конструктор может быть вызван только другим конструктором - в методе его вызывать нельзя
+	
+Statics (Exam Objective 1.3)
+	* Нельзя использовать не статик члены в статических методах
+		class Foo {
+			int x = 3;
+			float y = 4.3f;
+			public static void main (String [] args) {
+			for (int z = x; z < ++x; z--, y = y + z) // complicated looping and branching code
+		} }
+		//ошибка компиляции при использовании не статической переменной
+		
+	* Статические методы не могут быть переопределены
+	
+	* Компилятор заменяет вызов ref.staticMethod() на Class.staticMethod()
+		d.doStuff();
+		becomes:
+		Dog.doStuff();
+
+Coupling and Cohesion (Exam Objective 5.1)
 	* coupling - is the OO principle most closely associated with making sure classes know about other classes only through their APIs.
 	
 	* cohension - is the OO principle most closely associated with making sure a class is designed with a single, well-focused purpose.
-
-	* interface is-a Object
+	
 
 Arrays
 	* инициализация анаимного массива
@@ -319,7 +615,28 @@ Arrays
 		          }
 		     }
 	
+Primitive types
+	* При создании примитивных типов только float требует специального символа
+	
+	* byte, short, char могут присваиваться int
+	
+	* в double могут присваиватьсялюбые типы
+	
+	
 Boxing
+	* Спецтальный тип инициализации при создании обочных типов
+		Byte b1 = new Byte((byte)127);
+		Short s1 = new Short((short)127);
+		Long l1 = (long) 1;
+		
+	* При сравнении оболочных типо сравниваюстся классы
+		Byte bs2 = 1;
+		Long l = (long) 1;
+		System.out.println(bs2 == l); // ошибка компиляции
+		
+		Byte bs1 = 1;
+		System.out.println(bs1.equals(l)); // false потому что Byte instanceof Long == false
+
 	* Boolean, Byte, Character from \u0000 to \u007f (127), Short and Integer from -128 to 127 They are be =
 	
 		Integer i1 = 10;
@@ -332,11 +649,20 @@ Boxing
 		long l = 128L;
 		i1.equals(l) // Будет false
 	 
+	 * Оболочные классы не могут быть расширены
+	 	 Bytes не может быть раширен до Short e.t.c
 	 
-	 * Оболочные классы не могут быть расширены Bytes не может быть раширен до Short e.t.c
+	 * При передачи в методы где параметрами являются примитивнык типы происходит Unboxing и все работает
+	 	public class Frodo {
+	 		public static void main(String[] args) {
+	 			Short myGold = 7;
+  				System.out.println(countGold(myGold, 6)); // Сначала произойдет boxing до short потом cast до int (int = byte, short)
+	 		}
+	 		
+	 		public static int countGold(int x, int y) { return x + y; }
+	 	}
 	 
 	 * При overloading и autoboxing если просходит раширение до типа то проверяется IS-A
-	
 	 	class WidenAndBox {
 	 		static void go(Long x) { System.out.println("Long"); }
             
