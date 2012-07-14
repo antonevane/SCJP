@@ -1,3 +1,281 @@
+Identifiers & JavaBeans (Objectives 1.3 and 1.4)
+	* Идентификатор может быть любой длины
+	
+	* Может начинаться с '_', '$'
+	
+	* константы всегда final и static
+	
+	* в JavaBean нотации boolean может использовать 2 метода получения знаения
+		getFeild()
+		isField()
+
+JavaBean Listener Naming Rules
+	* метод использующийся для регистрации слушателя с источником события должен иметь префикс add следом тип события
+		addActionListener()
+		
+	* Название методля для удаления слушателя должен начинаться с префикса remove следом тип события
+		public void removeActionListener(ActionListener listener)
+		
+	* Тип слушателя который будет удаляться или добаляться должен передается как параметр
+	
+	* Имя метода слушателя должно оканчиваться словом Listener
+		public void addMyListener(MyListener m)
+		public void removeMyListener(MyListener m) 
+		
+Declare Classes (Exam Objective 1.1)
+	* Source File Declaration Rules
+		■  На файл может быть всего 1 public class
+		■  Коментарии могут появляться в любом месте класса
+		■  Имя файла с раширением class должно совпадать с именем public класса
+		■  Если класс находится в пакете то имя пакета должно быть первым выражением в класса
+		■  import должен идти между пакетои и именем класса. Если имени пакета нет то import идет первым выражением
+		■  package и import применяются ко всему файлу
+		■  В файле могут быть множество не final классов
+		
+	* Class Declarations and Modifiers
+		■  Модификаторы доступа: public, protected, private
+		■  Модификаторы не относящиеся к доступу: final, abstract, strictfp
+		
+	* Классу не обязательно быть public в файле т.е. может и небыть в файле public класса
+
+Default Access
+	* Так называемый пакетный доступ
+	
+	* При пакетном доступе классы из разных пакетов не могут видеть друг друга
+		package cert;
+			class Beverage { }
+			
+		package exam.stuff;
+			import cert.Beverage;
+                class Tea extends Beverage { }
+			
+		// Ошибка компиляции 
+		Can't access class cert.Beverage. Class or interface must be public, in same package, or an accessible member class.
+			import cert.Beverage;
+			
+Public Access
+	* Уровень доступа при котором класс доступен откуда угодно
+		public class A {}
+	
+	* Не доступен для наследования если помечен как final
+	
+Abstract Classes
+	* Никогда не инстанцируются
+	
+	* Не могут быть final
+		public abstract final class A {} //Compile error
+		
+	* Если хоть один метод помечен как abstract то class должен помечаться как абстрактный
+		public class Abstract {
+			public abstract void getAbstractName();
+		} 
+		
+		// Ошибка компиляции потому что класс должен быть не абстрактным
+		
+	* Абстрактный класс может не содержать абстрактных методов
+	
+	* Абстрактный класс может быть strictfp
+	
+	* Абстрактный класс может иметь конструкторы и методы
+	
+Declare Interfaces (Exam Objectives 1.1 and 1.2)
+	* интерфейсы пользуются теме же правилами для файло что и классы
+	
+	* Интерфейсы могут быть иметь следующие модификаторы доступа public и deault
+	
+	* public interface и public class вместе не могут быть в одном файле
+	
+	* При декларировании интерфейса можно использовать abstract
+	
+	* Правила объявления интерфейса:
+		■  методы интерфейса всегда public и abstract и нет необходимости это объявлять
+			public interface DeclaringInterface {
+				public abstract void bounce();
+				abstract public void bounce1();
+				void bounce2();
+				public void bounce3();
+				abstract void bounce4();
+			}
+		■  все переменный объявленные в интерфейсе должны быть public static final
+			public static final Apple APPLE = new Apple(); // ok
+			
+			static final Apple APPLE = new Apple(); // fail
+			public final Apple APPLE = new Apple(); // fail
+			public final Apple APPLE = new Apple(); // fail
+		■  Так как методы интерфейса абстрактны то они НЕ МОГУТ БЫТЬ:
+			■  final
+			■  strictfp
+			■  native
+		■  Можно наследовать то интерфейсы через extends
+		■  Поддерживается множественное наследование
+		■  Не могут наследовать классы
+
+	* При декларировании констант по умолчанию они public static final, ниже представлены легальные объявления
+		public int x = 1;
+		int x = 1;
+		static int x = 1;
+		final int x = 1;
+		public static int x = 1;
+		public final int x = 1;
+		static final int x = 1
+		public static final int x = 1;  // what you get implicitly
+		
+Declare Class Members (Objectives 1.3 and 1.4)
+	* Модификаторы доступа: public default protected private
+	
+Protected and Default Members
+	* При default доступ имеют только если в одно пакете
+		package a;
+		class A {
+			public void run() {}
+		}
+		
+		package b;
+		class B {
+			public void run() {
+				A a = new A(); // Ошибка компиляции
+			}
+		}
+
+	* default извне не доступен
+	
+	* При protected доступ имеют только если в одном пакете или через наследование только у потомков
+		package other;
+		import certification.Parent;
+  		class Child extends Parent {
+			public void testIt() {
+	        	System.out.println("x is " + x); // No problem; Child inherits x
+				
+				Parent p = new Parent(); // Can we access x using the p reference?
+				System.out.println("X in parent is " + p.x); // Compiler error
+		}}
+		
+Nonaccess Member Modifiers
+	* final метод не может быть переопределен
+	
+	* final аргумент метода не может изменяться в методе
+		
+		public Record getRecord(int fileNumber, final int recordNumber) {
+			recordNumber = 1; //Ошибка КОМПИЛЯЦИИ
+		}
+
+	* Abstract Methods это метод не имеющий {},  abstarct ';'.
+		Без слова abstract обязательно дожна быть реализация
+	
+	* модификаторы для методов strictfp, native, synchronized, final
+	
+	
+	* var-args синтаксис Тип .... <имя параметра>
+	
+	* var-args - обязан быть последним параметром
+	
+	* Аргумент то что передается в метод
+	
+	* Параметр это то что декларируется в методе
+
+Constructor Declarations
+	* Имя конструктора должно совпадать с именем класса
+		class Foo {
+			protected Foo() { }          // this is Foo's constructor
+			protected void Foo() { }     // this is a badly named, but legal, method
+		}
+		
+	* Конструктор не может быть static, final, abstract
+	
+Variable Declarations	
+	* В java 2 типа переменных:
+		■ Примитивные
+		■ Ссылочные
+		
+		* модификаторы для переменных volatile, transient, synchronized, final
+		
+Declaring Primitives and Primitive Ranges
+		* Все 6 примитвные типы емеют знак
+		
+		* Самый левый символ это знак
+			■ 0 - положительный
+			■ 0 - отрицательный
+		
+			byte - 0 1111111 (0 + 2 в 7й это значение байта) -128 до 127
+			
+			-2 в (bits-1) - отрицательный ряд
+			2 в (bits-1) и –1 - для положительного ряда
+			
+		Таблица с типами данных и размерами
+		|-------------------------------------------------|
+		|  Type  |Bits|Bytes|Minimum Range| Maximum Range |
+		|-------------------------------------------------|
+		| byte   | 8  | 1   | -2(in 7)    | -2(in 7)  -1  |
+		|-------------------------------------------------|
+		| short  | 16 | 2   | -2(in 15)   | -2(in 16)  -1 |
+		|-------------------------------------------------|
+		| int    | 32 | 4   | -2(in 31)   | -2(in 32)  -1 |
+		|--------------------------------------------------
+		| long   | 64 | 8   | -2(in 63)   | -2(in 63)  -1 |
+		|-------------------------------------------------|
+		| float  | 32 | 4   | NA          | NA            |
+		|-------------------------------------------------|
+		| double | 64 | 8   | NA          | NA            |
+		|-------------------------------------------------|
+
+		* длина char 65535	
+			
+Array Declarations
+	* Декларация массива выгдялит так
+		int[] key; // рекомендовано
+		int key [];
+	
+	* Декларация многомерного массива выгдялит так
+		String[][][] occupantName;
+  		String[] managerName [];
+  		
+  	* При декларировании массива нельзя задавать его длину
+  		int[5] scores; // Ошибка компиляции 
+
+Static Variables and Methods
+	* Декларируемые как static могу быть
+		■  методы
+		■  переменные класса
+		■  класс вложенный в другой класс
+		■  Блок иницализации
+	
+	* НЕ могут быть декларируемые как static
+		■  конструкторы
+		■  классы, если только они не вложенные
+		■  интерфейсы
+		■  методы локальных вложенных классов
+		■  переменные локального вложенного класса
+		■  локальные переменные
+	
+Declaring Enums
+	* Декларирование вне класса
+		enum CoffeeSize { BIG, HUGE, OVERWHELMING }
+	
+	* Декларирование внутри класса
+		class Coffee2 {
+			enum CoffeeSize {BIG, HUGE, OVERWHELMING }
+			CoffeeSize size;
+		}
+		
+	* Внутри метода НЕЛЬЗЯ декларировать перечисление
+	
+	* точка с запятой не обязательна после перечисление
+	
+	* Но если есть конструктор то тогда ';' обязательна
+	
+	* enum имеет метод values() - который возвращает массив перечислений
+	
+	* Конструктор enum НЕЛЬЗЯ вызывать
+	
+	* Конструктор enum может иметь больше 1го параметра
+	
+	* Можно переопределять метод для определенного значения перечисления (Анонимным классом)
+		OVERWHELMING(16) {
+			public String getLidCode() {   // override the method defined in CoffeeSize
+			return "A"; 
+			}
+		}
+	
 Encapsulation (Exam Objective 5.1)
 
 	* coupling - is the OO principle most closely associated with making sure classes know about other classes only through their APIs.
@@ -84,7 +362,7 @@ Operators
 	* операторы *= *= работают на выражением справа
 		int a *= 3 - 2
 		 Это не a = 3*a - 
-		 Это не a = a*(3-2)
+		 Это a = a*(3-2)
 		 
 	* instanceof null всегда false
 	

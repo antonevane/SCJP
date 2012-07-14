@@ -11,7 +11,7 @@ public class Date_Calendar_Currency_Formating {
 
 	/**
 	 * @param args
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	public static void main(String[] args) throws ParseException {
 		Calendar c = Calendar.getInstance();
@@ -20,6 +20,9 @@ public class Date_Calendar_Currency_Formating {
 		DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, loc);
 		String s = df.format(d);
 		System.out.println(s);
+		{
+
+		}
 
 		NumberFormat nf = NumberFormat.getCurrencyInstance(loc);
 		System.out.println(nf.format(120.00));
@@ -31,8 +34,6 @@ public class Date_Calendar_Currency_Formating {
 		System.out.println(Calendar.MONDAY == c1.getFirstDayOfWeek());
 		System.out.println(c1.getFirstDayOfWeek());
 
-		
-		
 		float f = 10.1126f;
 		NumberFormat fn = NumberFormat.getInstance();
 		System.out.println(fn.getMaximumFractionDigits()); // Выведет 3
@@ -44,6 +45,6 @@ public class Date_Calendar_Currency_Formating {
 		System.out.println(fn.parse("1234.567"));
 		fn.setParseIntegerOnly(false);
 		System.out.println(fn.parse("1234.567"));
-		
+
 	}
 }
