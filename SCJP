@@ -2310,7 +2310,7 @@ Set Interface
 		1 из 2х отсортированных коллекций
 		Red-Black tree structure - отсортирована в порядке возрастания (в натуральном порядке)
 		имплементирует NavigableSet
-		Правила сортировки можно солздать свой через Comparable or Comparator
+		Правила сортировки можно создать свой через Comparable or Comparator
 		не synchronized
 		
 Map Interface
@@ -2337,7 +2337,7 @@ Map Interface
 		
 	* TreeMap
 		Red-Black tree structure - отсортирована в порядке возрастания (в натуральном порядке)
-		имплементирует NavigableSet
+		имплементирует NavigableMap
 		Правила сортировки можно солздать свой через Comparable or Comparator
 		не synchronized	
 	
@@ -2426,6 +2426,31 @@ Searching Arrays and Collections
 	
 	* list.toArray() - может возвращать либо Object [] либо Тип []
 	
+	* Обзор методов Collections и Arrays
+		java.util.Arrays
+			■  static List asList(T[])								- ￼конвертирует массив с список
+			■  static int binarySearch(Object[], key)				- осуществляют поис в отсортированном массиве 
+			   static int binarySearch(primitive[], key)				возвращают индекс найденного элемента
+			■  static int binarySearch(T[], key, Comparator)			- осуществляет поиск в заданном массиве с учетом компоратора
+			■  static boolean equals(Object[], Object[])				- сравнивает 2 массива на эквивалентность по содержимому
+			   static boolean equals(primitive[], primitive[])
+			■  public static void sort(Object[ ] )					- сортирует массив в натуральном порядке (массив должен реализовывать  
+			   public static void sort(primitive[ ] )					Comparable иначе ошибка в Runtime)
+			■  public static void sort(T[], Comparator)				- сортирует элементы массива используя компоратор
+			■  public static String toString(Object[])				- создает строку содержащую контент массива 
+			   public static String toString(primitive[])
+
+		java.util.Collections  
+			■  static int binarySearch(List, key)					- осуществляют поис в отсортированном списке 
+			   static int binarySearch(List, key, Comparator)				возвращают индекс найденного элемента
+			■  static void reverse(List)								- переворачивает порядок элементов листе
+			■  static Comparator reverseOrder()						- Возвращает компоратор который сортирует в обратном порядке текущего компаратора
+			   static Comparator reverseOrder(Comparator)
+			■  static void sort(List)								- Сортирует список в натуральном порядке
+			   static void sort(List, Comparator)
+			
+￼
+	
 	* Iterator вызывается у коллекций list.iterator()
 	
 	* hasNext() говорит о том есть ли еще элемент
@@ -2476,7 +2501,24 @@ Navigating (Searching) TreeSets and TreeMaps
 		
 	* TreeSet.descendingSet(), TreeMap.descendingMap() - вернуть коллекцию в обратном порядке
 	
-	* Обзорная таблица всех методов для Navigation p. 588
+	* Обзорная таблица TreeSet, TreeMap
+		TreeSet
+		■ ￼TreeSet.ceiling(e)			- Returns the lowest element >= e
+		■ ￼TreeSet.higher(e)			- Returns the lowest element > e
+		■ ￼TreeSet.floor(e)			- Returns the highest element <= e
+		■ TreeSet.lower(e)			- Returns the highest element < e
+		■ ￼TreeSet.pollFirst()		- Returns and removes the first entry
+		■ ￼TreeSet.pollLast()			- Returns and removes the last entry
+		■ ￼￼￼TreeSet.descendingSet()	- Returns a NavigableSet in reverse order
+		
+		TreeMap
+		■ ￼TreeMap.ceilingKey(e)		- Returns the lowest key >= key
+		■ ￼TreeMap.higherKey(e)		- Returns the lowest key > key
+		■ ￼TreeMap.floorKey(e)		- Returns the highest key <= key
+		￼■ TreeSet.lowerKey(e)		- Returns the highest key < key
+		■ ￼TreeMap.pollFirstEntry()	- Returns and removes the first key-value pair
+		■ ￼TreeMap.pollLastEntry()	- Returns and removes the last key-value pair
+		■ ￼￼￼TreeMap.descendingMap()	- Returns a NavigableMap in reverse order
 	
 	* Backed Collections
 		TreeMap<String, String> map = new TreeMap<String, String>();
@@ -2508,7 +2550,7 @@ Navigating (Searching) TreeSets and TreeMaps
 		■  subMap(s, b*, e, b*) Returns a submap starting at key s and ending just before key s
 		
 		Если не используется boolean то возвращается SortedSet/SortedMap
-		Если используется boolean то возвращается NavigableSet/NavigableMap	
+		Если используется boolean то возвращается NavigableSet/NavigableMap, а так же включаются границы в подmap
 		
 	* SortedMap/SortedSet не имеют pollFirst***() и pollLast***()
 	
@@ -2541,7 +2583,7 @@ Navigating (Searching) TreeSets and TreeMaps
 		■  peek()		возвращает первый элемент
 		■  poll()		возвращает первый элемент и удаляет его
 		■  offer()		добавляет элемент в очередь
-		■  element()	возвращает но не удаляет элемент в первый элемент очереди
+		■  element()		возвращает но не удаляет элемент в первый элемент очереди
 		
 Generic Types (Objectives 6.3 and 6.4)
 	* На экзамене могут быть вопросы спрашивающие про Warnings
