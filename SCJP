@@ -1925,12 +1925,18 @@ Dates, Numbers, and Currency (Exam Objective 3.4)
 		System.out.println("new date " + d4.toString() ); //new date Fri Jul 08 19:46:40 MDT 2001
 	
 	* DateFormat - абстрактный класс со следущими статическими инициализаторами
-		DateFormat.getInstance();                      //9/8/01 7:46 PM
-		DateFormat.getDateInstance();                  //Sep 8, 2001 По умолчанию используется MEDIUM
-		DateFormat.getDateInstance(DateFormat.SHORT);  //9/8/01
-		DateFormat.getDateInstance(DateFormat.MEDIUM); //Sep 8, 2001
-		DateFormat.getDateInstance(DateFormat.LONG);   //September 8, 2001
-		DateFormat.getDateInstance(DateFormat.FULL);   //Saturday, September 8, 2001
+		DateFormat.getInstance();                      						// 9/8/01 7:46 PM
+		DateFormat.getDateInstance();                  						// Sep 8, 2001 По умолчанию используется MEDIUM
+		
+		DateFormat.getDateInstance(DateFormat.SHORT);  						// 9/8/01
+		DateFormat.getDateInstance(DateFormat.MEDIUM); 						// Sep 8, 2001
+		DateFormat.getDateInstance(DateFormat.LONG);  						// September 8, 2001
+		DateFormat.getDateInstance(DateFormat.FULL);   						// Saturday, September 8, 2001
+		
+		DateFormat.getDateInstance(DateFormat.SHORT, new Locale("us"));		// 9/8/01
+		DateFormat.getDateInstance(DateFormat.MEDIUM, new Locale("us"));	// Sep 8, 2001
+		DateFormat.getDateInstance(DateFormat.LONG, new Locale("us"));   	// September 8, 2001
+		DateFormat.getDateInstance(DateFormat.FULL, new Locale("us"));   	// Saturday, September 8, 2001
 		
 		String df.format(дата)
 		Date df.parse(String)
@@ -1970,6 +1976,17 @@ Dates, Numbers, and Currency (Exam Objective 3.4)
 		fn.parse("1234.567") //Выводит 1234
 		
 Parsing, Tokenizing, and Formatting (Exam Objective 3.5)
+	* Простой пример поиска
+		import java.util.regex.*;
+		class RegexSmall {
+		  public static void main(String [] args) {
+		    Pattern p = Pattern.compile("ab");
+		    Matcher m = p.matcher("abaaaba");
+		    while(m.find()) {
+		      System.out.print(m.start() + " ");
+		    }
+		} }
+
 	0[xX]([0-9a-fA-F])+ - поиск всех 16ти ричных 
 	
 	* Необходимые импорты
@@ -2029,7 +2046,8 @@ Parsing, Tokenizing, and Formatting (Exam Objective 3.5)
 			В начале строки
 			Между символами после найденного символа
 			В начале строки нулевой длинны
-	
+
+Searching Using the Scanner Class
 	* Поиск с помощью класса Scanner
 		Scanner s = new Scanner(System.in);
 		s.findInLine(args[0])
@@ -2043,20 +2061,72 @@ Tokenizing
 	
 	* Токены сканера могут быть автоматически сконвертированы в примитивные типы
 	
-	*Scanner имеет следующие методы для получения данных
+	* Scanner не имеет статических методов
+	
+	* Пример использования
+		import java.util.Scanner;
+		  class ScanNext {
+		    public static void main(String [] args) {
+		      boolean b2, b;
+		      int i;
+		      String s, hits = " ";
+		      Scanner s1 = new Scanner(args[0]);
+		      Scanner s2 = new Scanner(args[0]);
+		      while(b = s1.hasNext()) {
+		        s = s1.next();  hits += "s";
+		      }
+		      
+		      while(b = s2.hasNext()) {
+		        if (s2.hasNextInt()) {
+		          i = s2.nextInt();  hits += "i";
+		        } else if (s2.hasNextBoolean()) {
+		          b2 = s2.nextBoolean();  hits += "b";
+		        } else {
+		          s2.next();  hits += "s2";
+		        }
+		}
+		      System.out.println("hits " + hits);
+		    }
+		}
+		
+		If this program is invoked with
+		  % java ScanNext "1 true 34 hi"
+		
+		it produces
+		  hits  ssssibis2
+	
+	* Scanner имеет следующие методы для получения данных
 		String next()
 		<Type> nextXXX() - <Type> - Boolean, Byte, Short, Integer, Double, Float, BigInteger, BigDecimal
 		
 		# Кроме char
 		
-	*Scanner имеет следующие для проверки
+	* Scanner имеет следующие для проверки
 		Boolean hasNext()
 		Boolean hasNextXXX()
 		
-	*Scanner может устанавливать локаль и делимитр систему счисления
+	* Scanner может устанавливать локаль и делимитр систему счисления
 		scanner.useDelimiter(pattern)
 		scanner.useLocale(locale)
-		scanner.useRadix(radix) 
+		scanner.useRadix(radix)
+
+Tokenizing with Scanner
+	* Сканер использую когда надо сделать что то серьезное чем String.split() - обычно используют
+		new java.util.Scanner(String);
+		new java.util.Scanner(new File(""));
+		new java.util.Scanner(new FileInputStream(""));
+		new java.util.Scanner(new Readable() {
+
+			@Override
+			public int read(CharBuffer cb) throws IOException {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+		});
+		
+Formatting with printf() and format()
+	* printf("format string", argument(s));
 	
 	* Маска printf
 		%[arg_index$][flags][width][.precision]conversion char
@@ -2084,8 +2154,11 @@ Tokenizing
 		System.out.format(">%+-7d< \n", i2);				// >+12345 <
 		System.out.printf(">%2$b + %1$5d< \n", i1, false);	// >false + -123<
 		
+		double a = -1.000011121;
+		System.out.format(">%1$0,20.1f<", a); //>-00000000000000001,0<
+		
 	* Ошибки компиляции при указании format
-		System.out.format("%d", 12.3); - ошибка компиляции
+		System.out.format("%d", 12.3); - ошибка компиляции потому что требуется double
 		
 Overriding hashCode() and equals() (Objective 6.2)
 	* На экзамене попадаюся примеры на правила переопределения а не на equals
