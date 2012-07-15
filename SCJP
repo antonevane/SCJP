@@ -164,7 +164,6 @@ Nonaccess Member Modifiers
 	
 	* модификаторы для методов strictfp, native, synchronized, final
 	
-	
 	* var-args синтаксис Тип .... <имя параметра>
 	
 	* var-args - обязан быть последним параметром
@@ -579,15 +578,294 @@ Coupling and Cohesion (Exam Objective 5.1)
 	
 	* cohension - is the OO principle most closely associated with making sure a class is designed with a single, well-focused purpose.
 	
-
-Arrays
-	* инициализация анаимного массива
-		int[] z = new int [] {10,1}; 
+Literals, Assignments,andVariables (Exam Objectives 1.3 and 7.6)
+	* Примеры примитивных литералов:
+		■ 'b'		// char literal
+		■ 42			// int literal
+		■ false		// boolean literal
+		■ 23.44		// double literal
 		
+Integer Literals
+	* Существует 3 способа представить integer число в Java
+		■ decimal (основание 10)
+		■ octal (основание 8)
+		■ hexadecimal (основание 16)
+		
+	* Decimal Literals
+		Обычные значения int
+			int i = 10;
+			
+	* Octal Literals:
+		■ Используются числа от 0 до 7
+		■ Запись идет с лидирующим 0
+		■ Может использоваться до 21 цифры не считая лидирующего 0 
+		
+		class Octal {
+		    public static void main(String [] args) {
+		      int six = 06;     // Equal to decimal 6
+		      int seven = 07;   // Equal to decimal 7
+		      int eight = 010;  // Equal to decimal 8
+		      int nine = 011;   // Equal to decimal 9
+		      System.out.println("Octal 010 = " + eight);
+		} }			
+		
+	* Hexadecimal Literals
+		■ Используют для представления числа от 0 до f
+		■ В java все равно на регистр букв
+		■ Префикс 0x
+		■ Необязательный суфикс  L
+		
+		class HexTest {
+		    public static void main (String [] args) {
+		      int x = 0X0001;
+		      int y = 0x7fffffff;
+		      int z = 0xDeadCafe;
+		      System.out.println("x = " + x + " y = " + y + " z = " + z);
+		} }
+		//x = 1 y = 2147483647 z = -559035650
+		
+	* Cуффиксы целых примитивных типов
+		■ L,l - long
+			long jo = 110599L;
+  			long so = 0xFFFFl;  // Note the lowercase 'l'
+
+Floating-Point Literals
+	* По умолчанию число double, не требует специального суфикса, но имеет его:
+		D, d
+		
+		double d = 110599.995011D; // Optional, not required
+  		double g = 987.897;        // No 'D' suffix, but OK because the literal is a double by default
+	
+	* При создании примитивных типов только float требует специального суфикса :
+		F, f
+		
+		float f = 23.467890;         // Compiler error, possible loss of precision
+		float g = 49837849.029847F;  // OK; has the suffix "F"
+	
+	* ',' - не является разделителем дробной части
+	
+Character Literals
+	* Длина 65535
+	
+	* Может представляться как символ юникода
+		char unicodeChar = '\u004E'; // The letter 'N'
+		
+	* Пример хитрых валидных присвоений char
+		char a = 0x892;        // hexadecimal literal
+  		char b = 982;          // int literal
+  		char c = (char)70000;  // The cast is required; 70000 is out of char range
+  		char c = '\"';    // A double quote
+		char d = '\n';    // A newline
+  		
+  	* Можно присвоить int
+  		char c = 1;
+  		int i = c = 1;
+  		
+	* Пример хитрых невалидных присвоений char	
+		char e = -29;   // Possible loss of precision; needs a cast
+		char f = 70000  // Possible loss of precision; needs a cast
+		
+Primitive Assignments		
+	* byte, short, char могут присваиваться int
+	
+	* в double могут присваиваться любые типы
+	
+	* Операция сложения приводит к результату int
+		byte a = 1;
+		byte b = 1;
+		byte c = a + b 
+		// Ошибка компиляции компилятор possible loss of precision
+  			found   : int
+  			required: byte
+			 byte c = a + b;
+						^
+		Это происходит если складываются
+			byte + byte
+			short + short
+			short + byte
+	
+	* byte не может быть больше 127
+		 byte a = 128; //Ошибка компиляции - possible loss of precision
+		 //но
+		 byte a = (byte) 128; // Все ОК
+	
+	* Если использовать операторы короткой схемы то они автоматически проводят типы (+=, -=, *=, /=)
+		byte b = 127;
+		b += 7; // -122
+		
+		// Эквивалентно
+		b = (byte) (b + 7)
+		
+Variable Scope
+	* Scope очень не простая, и путующая штука в экзамене - надо помнить о видимости переменной
+		■ Попытка получения доступа к переменной из статического контекста
+			class ScopeErrors {
+			  int x = 5;
+			  public static void main(String[] args) {
+			    x++;   // won't compile, x is an 'instance' variable
+			  }
+			}
+		■ Попытка получения доступа к локальной переменной из вложенного метода
+			class ScopeErrors {
+				public static void main(String [] args) {
+			    	ScopeErrors s = new ScopeErrors();
+					s.go(); 
+				}
+				
+				void go() {
+					int y = 5;
+					go2();
+			    	y++;        // once go2() completes, y is back in scope
+			  	}
+				
+				void go2() {
+					y++;        // won't compile, y is local to go()
+				} 
+			}
+		■ Попытка использования переменной блока после того как код блока закончился
+			void go3() {
+				for(int z = 0; z < 5; z++) {
+					boolean test = false;
+	
+					if(z == 3) {
+						test = true;
+						break; 
+					}
+				}
+			
+				System.out.print(test); // 'test' is an ex-variable,it has ceased to be...
+			}
+			
+	* Лего попасться на не инициализированных переменных
+		int x;
+		x++;
+		
+		public void trick(int sameName){
+			sameName++;
+			for (int sameName = 0; sameName < array.length; sameName++) { // Уже объявлено как параметр метода
+			}
+		}
+
+Primitive and Object Type Instance Variables
+	* Значения по умолчанию принимаемые переменными класса
+		■ Объектная ссылка:				null
+		■ ￼byte, short, int, long:		0
+		■ ￼float, double:					0.0
+		■ boolean:						false
+		■ char:							'\u0000'
+
+Array Instance Variables
+	* Элементы массива всегда инициализируются значениемя по умолчанию
+		public class BirthDays {
+		    static int [] year = new int[100];
+		    public static void main(String [] args) {
+		      for(int i=0;i<100;i++)
+		        System.out.println("year[" + i + "] = " + year[i]);
+		} }
+		
+		// Напечатается 100 значений с 0  - year[1..100] = 0 
+
+Local Primitives
+	* Локальные переменные и объектные ссылки должны быть инициализированы до использования
+		public class TimeTravel {
+		    public static void main(String [] args) {
+		      int year; // Local variable (declared but not initialized)
+		      Date date;
+		      System.out.println("The year is " + year + "\nDate is " + date); // Compiler error
+		    }
+		}
+
+Passing Variables into Methods (Objective 7.3)
+	* Ссылки передаются в методы по значению
+	
+	* Не возможно изменить объектную сслыку в методе можно только изменить значение ее переменной
+		class Foo {
+		    Bar myBar = new Bar();
+		    void changeIt(Bar myBar) {
+		      myBar.barNum = 99;
+		      System.out.println("myBar.barNum in changeIt is " + myBar.barNum);
+		      myBar = new Bar();
+		      myBar.barNum = 420;
+		      System.out.println("myBar.barNum in changeIt is now " + myBar.barNum);
+		    }
+		    public static void main (String [] args) {
+		      Foo f = new Foo();
+		      System.out.println("f.myBar.barNum is " + f.myBar.barNum);
+		      f.changeIt(f.myBar);
+		      System.out.println("f.myBar.barNum after changeIt is "  + f.myBar.barNum);
+		} }
+
+Array Declaration, Construction, and Initialization (Exam Objective 1.3)
+	* Создание одномерного массива
+		int[] testScores = new int[4];
+		
+	* Необходимо следить за указанием количества элементов при создании массива
+		int[] carList = new int[]; // Will not compile; needs a size
+		
+	* Создание многомерного массива
+		int[][] myArray = new int[3][];
+		
+Initializing an Array
+	* Инициализация многомерного массива
+		int[][] scores = new int[3][];	// Declare and create an array holding three references to int arrays
+		
+		scores[0] = new int[4];	// the first element in the scores array is an int array of four int elements
+
+		scores[1] = new int[6]; // the second element in the scores array is an int array of six int elements
+
+		scores[2] = new int[1]; // the third element in the scores array is an int array of one int element
+  		
+Initializing Elements in a Loop		
 	* У массивов length это свойство
 		String[] x = new String[3];
 		System.out.println( x.length() ); // compiler error
+
+Declaring, Constructing, and Initializing on One Line
+	* Массив можно инициировать сразу
+		int x = 9;
+		int[] dots = {6,x,8};
 		
+	* Инициализация многомерного массива по короткой схеме
+		int[][] scores = {{5,2,4,7}, {9,2}, {3,4}}; // Создаться 4 объекта в памяти
+
+		Такие элементы содержит массив
+			scores[0] // an array of four ints 
+			scores[1] // an array of 2 ints 
+			scores[2] // an array of 2 ints 
+			
+			scores[0][1] // the int value 2 
+			scores[2][1] // the int value 4
+
+	* такое возможно int[][] a = {{1,2,}, {3,4}};
+	
+Constructing and Initializing an Anonymous Array	
+	* Инициализация анаимного массива
+		int[] z = new int [] {10,1};
+		
+	* Размер анонимного массива нельзя задавать
+		 new Object[3] {null, new Object(), new Object()}; // Compiler error
+		 
+Array Reference Assignments for One-Dimensional Arrays
+	* При присвоении массивов проверяется правило IS-A
+		Car[] cars;
+		Honda[] cuteCars = new Honda[5];
+		cars = cuteCars; // OK because Honda is a type of Car
+		Beer[] beers = new Beer [99];
+		cars = beers; // NOT OK, Beer is not a type of Car
+	
+	* Массив int [] может быть только переприсвоен ссылочной переменной int []
+		int[] splats;
+		int[] dats = new int[4];
+		char[] letters = new char[5];
+		splats = dats; // OK, dats refers to an int array
+		splats = letters; // NOT OK, letters refers to a char array
+
+Array Reference Assignments for Multidimensional Arrays
+	* 2х мерный массив int не может быть присвоен к одномерному
+		int[] blots;
+		int[][] squeegees = new int[3][];
+		blots = squeegees; // NOT OK, squeegees is a two-d array of int arrays
+	
 	* ArrayStoreException кидается когда в массив передается объект не того типа, в основном это можно получить в случае полиморфизма
 		public class PolymorphicArray {
 		public static void main(String[] args) {
@@ -603,7 +881,7 @@ Arrays
 		class Dog extends Animal {}
 		class Cat extends Animal {}
 		
-	* D В runtime случится ArrayStoreException
+	* В runtime случится ArrayStoreException
 		class A{}
 		     class B extends A{}
 		     class C extends B{}
@@ -614,22 +892,124 @@ Arrays
 		               a[0] = new B() // В runtime это C[]
 		          }
 		     }
+
+Initialization Blocks
+	* Блок инициализации запускается когда класс впервые загружен - static initialization block
+		class SmallInit {
+			static int x;
+			static { x = 7 ; } // static init block
+		}
 	
-Primitive types
-	* При создании примитивных типов только float требует специального символа
+	* Блок инициализации запускается когда создается экземпляр объекта - instance initialization block
+		class SmallInit {
+			int y;
+			{ y = 8; } // instance init block
+		}
+		
+	* instance init block - запускается сразу после вызова super() - конструктора
 	
-	* byte, short, char могут присваиваться int
+	* Блоки инициализации запускаются в том порядке в котором расположены в файле
+		class Init {
+		    Init(int x) { System.out.println("1-arg const"); }
+		    Init() { System.out.println("no-arg const"); }
+		    static { System.out.println("1st static init"); }
+		    { System.out.println("1st instance init"); }
+		    { System.out.println("2nd instance init"); }
+		    static { System.out.println("2nd static init"); }
+		    public static void main(String [] args) {
+		      new Init();
+		      new Init(7);
+		} }
+		
+		1st static init
+		2nd static init
+		1st instance init
+		2nd instance init
+		no-arg const
+		1st instance init
+		2nd instance init
+		1-arg const
+		
+		Следующие правила вызова блоков инициализации
+			■ Блоки инициализации запускаются в том порядке в котором расположены в файле
+			■ Статические блоки инициализации запускаются единожды когда класс загружается
+			■ Блоки инициализации экземпляра переменной запускаются каждый раз как создается класс
+			■ Блоки инициализации экземпляра запускаются сразу после того как конструкторы вызывают super()
+			
+	* Если в блоке инициализации возникает ошибка то выбрасывается исключение java.lang.ExceptionInInitializerError			
+			
+Using Wrapper Classes and Boxing (Exam Objective 3.1)
+	* В java существуют классы оболочки для примитивных типов
+		■ boolean - Boolean
+			Boolean(boolean b)
+			Boolean(String value)
+		
+		■ byte - Byte
+			Byte(byte b)
+			Byte(String value)
+		
+		■ char - Character
+			Character(char value)
+		
+		■ double - Double
+			Double(double d)
+			Double(String value)
+		
+		■ float - Float
+			Float(float f)
+			Float(double d)
+			Float(String value)
+		
+		■ int - Integer
+			Integer(int i)
+			Integer(String value)
+		
+		■ long - Long
+			Long(long l)
+			Long(String value)
+		
+		■ short - Short
+			Short(short s)
+			Short(String value)		 
+
+	* Все оболочные классы имеют метод 
+		static <Тип> valueOf()
+		Возвращает оболочный тип
+			Integer i2 = Integer.valueOf("101011", 2); // Преобразование значения по основанию 2 в тип integer =  43
+			i2 = Integer.valueOf(1);
+			i2 = Integer.valueOf("1");
+			
+	* Если при valueOf(String string) или в parseXxx(String string) задать некорректное значение числа то будет выброшена ошибка
+		Integer val = Integer.valueOf("11d");
+		 java.lang.NumberFormatException: For input string: "11d"
+		 
+	* static <примитивный тип> parseXxx(String) - возвращает примитивный тип
 	
-	* в double могут присваиватьсялюбые типы
-	
-	
-Boxing
-	* Спецтальный тип инициализации при создании обочных типов
+	* У оболочек есть перегруженные статические методы toString()
+		String d = Double.toString(3.14);      // d = "3.14"
+		
+	* Long и Integer предоставляют 3ю версию toString()
+		Long.toString(long value,int radix)
+			String s = "hex = "+ Long.toString(254,16); // s = "hex = fe"
+			
+	* Long и Integer предоставляют специальные методы методы для конвертации чисел из 10 в другие системы toXxxString()
+		String s3 = Integer.toHexString(254);  // convert 254 to hex
+		System.out.println("254 is " + s3);    // result: "254 is fe"
+		String s4 = Long.toOctalString(254); // convert 254 to octal
+		System.out.print("254(oct) ="+ s4);  // result: "254(oct) =376"
+			
+	* Все экземпляры оболочных классов имеют ряд так называемых xxxValue() методов
+		Integer i2 = new Integer(42);  //  make a new wrapper object
+		byte b = i2.byteValue();       //  convert i2's value to a byte primitive
+		short s = i2.shortValue();     //  another of Integer's xxxValue methods
+		double d = i2.doubleValue();   //  yet another of Integer's xxxValue methods
+
+	* Специальный тип инициализации при создании оболочных типов
 		Byte b1 = new Byte((byte)127);
 		Short s1 = new Short((short)127);
 		Long l1 = (long) 1;
 		
-	* При сравнении оболочных типо сравниваюстся классы
+	* При сравнении оболочных типов сравниваются классы
 		Byte bs2 = 1;
 		Long l = (long) 1;
 		System.out.println(bs2 == l); // ошибка компиляции
@@ -637,8 +1017,13 @@ Boxing
 		Byte bs1 = 1;
 		System.out.println(bs1.equals(l)); // false потому что Byte instanceof Long == false
 
-	* Boolean, Byte, Character from \u0000 to \u007f (127), Short and Integer from -128 to 127 They are be =
-	
+Boxing, ==, and equals()
+	* Примитивные типы будут == если:
+		■ они Boolean
+		■ они Byte
+		■ они Character from \u0000 to \u007f (127)
+		■ они Short and Integer from -128 to 127
+		
 		Integer i1 = 10;
 		Integer i2 = 10;
 		i1 == i2; // True
@@ -652,7 +1037,7 @@ Boxing
 	 * Оболочные классы не могут быть расширены
 	 	 Bytes не может быть раширен до Short e.t.c
 	 
-	 * При передачи в методы где параметрами являются примитивнык типы происходит Unboxing и все работает
+	 * При передачи в методы где параметрами являются примитивные типы происходит Unboxing и все работает
 	 	public class Frodo {
 	 		public static void main(String[] args) {
 	 			Short myGold = 7;
@@ -661,7 +1046,8 @@ Boxing
 	 		
 	 		public static int countGold(int x, int y) { return x + y; }
 	 	}
-	 
+
+Overloading (Exam Objectives 1.5 and 5.4)
 	 * При overloading и autoboxing если просходит раширение до типа то проверяется IS-A
 	 	class WidenAndBox {
 	 		static void go(Long x) { System.out.println("Long"); }
@@ -671,16 +1057,94 @@ Boxing
                     go(b); // must widen then box - illegal
 			} 
 		}
+		
+	* Расширение привалирует над Boxing
 	
-	* Here's a review of the rules for overloading methods using widening, boxing, and var-args:
-		■ Primitive widening uses the "smallest" method argument possible.
+	* Расширение привалирует над var-arg
+		class AddVarargs {
+		    static void go(int x, int y) { System.out.println("int,int");}
+		    static void go(byte... x) { System.out.println("byte... "); }
+		    public static void main(String[] args) {
+				byte b = 5;
+		    	  go(b,b);         // which go() will be invoked?
+		   	 }
+		}
+		// ответ int int
+	
+	* Wrapper не могут быть приведены к друг другу это вызывает ошибку компиляции
+		class Dog4 {
+			public static void main(String [] args) {
+				Dog4 d = new Dog4();
+				d.test(new Integer(5));  // can't widen an Integer to a Long
+			}
+  			void test(Long x) { }
+		}
+
+	
+	* Boxing привалирует над var-arg
+	
+	* Правила которые используются при  widening, boxing, and var-args:
+		■ Примитивные типы при расширение используют наименьший элемент из возможных
 		■ Used individually, boxing and var-args are compatible with overloading.
-		■ You CANNOT widen from one wrapper type to another. (IS-A fails.)
-		■ You CANNOT widen and then box. (An int can't become a Long.)
-		■ You can box and then widen. (An int can become an Object, via Integer.)
-		■ You can combine var-args with either widening or boxing.
+		■ Нелья приводит один тип оболочки к другому типу (IS-A fails.)
+			class Dog4 {
+				public static void main(String [] args) {
+					Dog4 d = new Dog4();
+					d.test(new Integer(5));  // can't widen an Integer to a Long
+				}
+	  			void test(Long x) { }
+			}
+		■ Нельзя вместе использовать раширение и Boxing (An int can't become a Long.)
+			class WidenAndBox {
+				static void go(Long x) { System.out.println("Long"); }
+				public static void main(String [] args) {
+					byte b = 5;
+					go(b);           // must widen then box - illegal
+			} }
+		■ Можно использовать сначала упаковку а потом расширение. (An int can become an Object, via Integer.)
+			class BoxAndWiden {
+			  static void go(Object o) {
+			    Byte b2 = (Byte) o;
+			    System.out.println(b2);
+			  }
+			// ok - it's a Byte object
+			  public static void main(String [] args) {
+			    byte b = 5;
+			    go(b);       // can this byte turn into an Object ?
+			} }
+		■ var-args можно совмещать или с widening или boxing.
+			class Vararg {
+			    static void wide_vararg(long... x)
+			                { System.out.println("long..."); }
+			    static void box_vararg(Integer... x)
+			                { System.out.println("Integer..."); }
+			    public static void main(String [] args) {
+			    	int i = 5;
+			    	wide_vararg(i,i);
+			    	box_vararg(i,i);
+			    }
+			}	
+			// результат
+			long...
+			Integer...	
+
+Garbage Collection (Exam Objective 7.4)
+	* Обнуление ссылки на объект делает его доступным для GarbageCollector
 	
-	* такое возможно int[][] a = {{1,2,}, {3,4}};
+	* Переназначение ссылки на объект делает его доступным для GarbageCollector
+		StringBuffer s1 = new StringBuffer("hello");
+		StringBuffer s2 = new StringBuffer("goodbye");
+		System.out.println(s1);
+		// At this point the StringBuffer "hello" is not eligible
+		s1 = s2; // Redirects s1 to refer to the "goodbye" object
+		// Now the StringBuffer "hello" is eligible for collection
+	
+	* Объекты всозданные в методе становятся доступными после окончания метода
+	
+Tricky Little finalize() Gotcha's
+	* finalize() может быть вызван однажды garbage коллектором
+	
+	* Вызов finalize() может привести в результате сохранению объекта от удаления
 	
 Operators
 	* операторы += *= делают cast

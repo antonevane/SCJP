@@ -5,9 +5,12 @@ public class Arrays {
 		int[][] ar = new int[1][];
 		int[] c = new int[2];
 
+		int[][][] myArray = new int[3][][];
+
 		ar[0] = c;
 		
-		int[] z = new int [] {10,1}; 
+
+		int[] z = new int[] { 10, 1 };
 
 		Integer i = new Integer("2");
 		i = Integer.valueOf("1000", 2);
