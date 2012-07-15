@@ -23,8 +23,8 @@ public class PrivateEnum {
 	
 	public void trick(int sameName){
 		sameName++;
-		for (int sameName = 0; sameName < array.length; sameName++) {
-		}
+//		for (int sameName = 0; sameName < array.length; sameName++) {
+//		}
 	}
 
 }

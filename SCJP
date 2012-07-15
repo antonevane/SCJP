@@ -1146,6 +1146,8 @@ Tricky Little finalize() Gotcha's
 	
 	* Вызов finalize() может привести в результате сохранению объекта от удаления
 	
+	* finalize()  может и не вызваться
+	
 Operators
 	* операторы += *= делают cast
 	
@@ -1183,7 +1185,7 @@ Operators
 	
 	* операторы * , / и % имеют приоритет выше чем + и -
 	
-	* скобки имеют приоритет
+	* скобки имеют приоритет перед операторами
 	
 	* При конкотенации строки если поставить скобки то будет вычисляться результат
 		String a = "String";
@@ -1458,7 +1460,9 @@ Using Assertions Appropriately (По конвеции Sun)
 			assert (x > 0);
 			// do things with x
 		}
+	 
 	 * Inappropriate использовать assertion для валидации аргументов командной строки
+	 
 	 * Inappropriate использовать assertion для изменения логики работы программы, при вызове assertion и без него логика остается таже
 	 	public void doStuff() {
 			assert (modifyThings());
@@ -1495,16 +1499,16 @@ Strings
 		//В этом случае создается объект в обычной памяти, создается ссылка, а также "abc" помещается в пул				
 		
 	* Методы которые встречаются на экзамене
-		■  public charAt(index) 				Returns the character located at the specified index
-		■  public concat(string)				Appends one String to the end of another ( "+" also works)
+		■  public charAt(index) 					Returns the character located at the specified index
+		■  public concat(string)					Appends one String to the end of another ( "+" also works)
 		■  public equalsIgnoreCase(string) 		Determines the equality of two Strings, ignoring case
 		■  public length() 						Returns the number of characters in a String
-		■  public replace(char, replaceChar)	Replaces occurrences of a character with a new character
+		■  public replace(char, replaceChar)		Replaces occurrences of a character with a new character
 		■  public substring(startPos) 			Returns a part of a String
 		■  public substring(startPos, endPos)	Returns a part of a String
-		■  public toLowerCase() 				Returns a String with uppercase characters converted
+		■  public toLowerCase() 					Returns a String with uppercase characters converted
 		■  public toString() 					Returns the value of a String
-		■  public toUpperCase() 				Returns a String with lowercase characters converted
+		■  public toUpperCase() 					Returns a String with lowercase characters converted
 		■  public trim() 						Removes whitespace from the ends of a String
 	
 	* У строк length это метод
@@ -1571,6 +1575,32 @@ StringBuffer, StringBuilder
 			System.out.println(sb); // output: "amanaP lanac a nalp a nam A"
 			
 		■  public String toString()
+		
+	* Методы которые пересекаются с классом String
+		String s = ";";
+		StringBuffer sb = new StringBuffer();
+		
+		s.substring(10);
+		sb.substring(10);
+		
+		s.substring(10, 12);
+		sb.substring(10, 12);
+		
+		s.charAt(1);
+		sb.charAt(1);
+		
+		s.length();
+		sb.length();
+		
+	* У StringBuffer не переопределен equals
+		StringBuffer sb1 = new StringBuffer("1");
+		StringBuffer sb2 = new StringBuffer("1");
+		System.out.println(sb1.equals(sb2));	// Будет false
+		
+		StringBuffer sb12 = new StringBuffer("1");
+		StringBuffer sb22 = new StringBuffer(sb12);
+		sb12 =sb22;
+		System.out.println(sb12.equals(sb22)); // Будет true
 
 File Navigation and I/O (Exam Objective 3.2)
 	* I/O Классы для экзамена
@@ -1603,31 +1633,149 @@ File Navigation and I/O (Exam Objective 3.2)
 		newFile = file.createNewFile() - создает файл или ссылку на существующий возвращает boolean
 		System.out.println(file.exists());  // look for a real file
 		
+	* Первый вызов createNewFile() возвратит true
+	
+	* Повторны вызов createNewFile() возвратит false
+		
 	* createNewFile() создает новый файл только если он не существует
 	
+Using FileWriter and FileReader
+	* Работа с файлами через Witer/Reader
+		public static void main(String[] args) throws IOException {
+			File fileToWrite = new File("FileToWrite.txt");
+			FileWriter fileWriter = new FileWriter(fileToWrite);
+			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+			bufferedWriter.write("Hello");
+			bufferedWriter.newLine();	// добавляет \n
+			bufferedWriter.write("Hello1");
+			bufferedWriter.flush();
+			bufferedWriter.close();
+			
+	
+			File fileToRead = new File("FileToWrite.txt");
+			FileReader fileReader = new FileReader(fileToRead);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			System.out.println(bufferedReader.readLine());
+			bufferedReader.close();
+			
+			File toRename = new File("rename.txt");
+			fileToRead.renameTo(toRename);
+		}	
+			
 	* FileWriter - нужно делать flush() и close()
 	
 	* FileWriter fw = new FileWriter(file); // Физически создает файл
 	
 	* FileReader - read(char [] buffer), обязательно нужно закрывать
 	
-	* Reader не иммет Flush
-	
-	* File - имеет метод по созданию директории mkDir()
+	* Reader не иммет flush()
 	
 	* File - можно привезать и к директории File(File директория, String имя_файла)
 	
 	* Если не создать директорию вызвав метод но передать в конструктор то будет ошибка java.io.IOException: No such file or directory
+		File myDir = new File("mydir");
+		// myDir.mkdir(); // call to mkdir() omitted!
+		File myFile = new File(myDir, "myFile.txt");
+		myFile.createNewFile();	// exception if no mkdir!
 	
 	* метод delete() у класса File не может удалить директорию если она не пустая
 	
-	* renameTo() - выбросит NullPointerEception если передать null в имя нового файла
+	* renameTo(File, имя) - выбросит NullPointerEception если передать null в имя нового файла
+	
+	* Важные методы и конструкторы для I/O
+		* File extend Object
+			■  new File(File, String)
+			■  new File(String)
+			■  new File(String, String)
+			
+			//Методы
+			■  boolean createNewFile()
+			■  boolean delete() - удаляет либо файл либо директорию, директория должна быть пустая
+			■  boolean exists()
+			■  boolean isDirectory() - 
+			■  boolean isFile()
+			■  String [] list() - список директорий
+			■  boolean mkdir()
+			■  boolean renameTo(File) // Переименовывает директории даже если не пустые
+				
+				File newName = new File(delDir, null); 	// Имя файла null
+				delFile2.renameTo(newName); 			// Выбросит NullPointerException
+			
+		* FileWriter extend Writer
+			■  new FileWriter(File)
+			■  new FileWriter(String)
+			
+			//Методы
+			■  close() - закрыть поток
+			■  flush() - сбросить данные поток
+			■  write(String) - записать в файл
+
+		* BufferedWriter extend Writer
+			■  new FileWriter(Writer)
+			
+			//Методы
+			■  close() - закрыть поток
+			■  flush() - сбросить данные поток
+			■  write(String) - записать в файл
+			■  newLine()
+			
+		* FileReader extend Reader
+			■  new FileReader(File)
+			■  new FileReader(String)
+			
+			//Методы
+			■  close() - закрыть поток
+			■  Reader (InputStreamReader) read() - считать из файла в файл
+			
+		* BufferdFileReader extend Reader
+			■  new BufferdFileReader(Reader)
+			
+			//Методы
+			■  close() - закрыть поток
+			■  Reader (InputStreamReader) read() - считать из файла в файл
+			■  String readLine() - возвращает null если нет данных
+			
+		* PrintWriter extend Writer
+			■  new PrintWriter(Writer)
+			■  new PrintWriter(OutputStream)
+			■  new PrintWriter(File) - Java 5
+			■  new PrintWriter(String) - Java 5
+			
+			
+			//Методы
+			■  close() - закрыть поток
+			■  flush() - сбросить данные поток
+			■  print()
+			■  println()
+			■  printf()
+			■  format() 
+
+			File toRename = new File("rename.txt");
+			FileWriter fw = new FileWriter(toRename);
+			PrintWriter pw = new PrintWriter(fw);
+			// println запись в файл
+			pw.println("data");
+			pw.println(1);
+			pw.println('c');
+			pw.println(1l);
+			pw.println(1f);
+			pw.println(1d);
+			pw.printf("%1d", 1, 2);
+			pw.flush();
+			pw.close();
+
 	
 	* Для поиска файла используется метод String [] search()
 		String[] files = new String[100];
 		File search = new File("searchThis");
 		files = search.list();
 		
+	* Работа с файлом чтение с помощью потоков BufferedInputStream
+	 	FileInputStream fis = new FileInputStream(f2);
+		BufferedInputStream bif = new BufferedInputStream(fis);
+		bif.read();
+		bif.close();
+	
 java.io.Console Class
 	* System.console() - возвращает ссылку на физическую консоль, невозможно использовать если нет доступа
 
@@ -1644,11 +1792,40 @@ Serialization (Exam Objective 3.3)
 	
 	* ObjectInputStream.readObject() // read and deserialize
 	
-	* Обязательно должен быть имплеменирован интерфейс Serializable
+	* Пример сериализации и десирализации
+		import java.io.*;
+		class Cat implements Serializable { } // 1
+		public class SerializeCat {
+			public static void main(String[] args) {
+				Cat c = new Cat();  // 2
+				try {
+					FileOutputStream fs = new FileOutputStream("testSer.ser"); ObjectOutputStream os = new ObjectOutputStream(fs); os.writeObject(c); // 3
+					os.close();
+				} catch (Exception e) { e.printStackTrace(); }
+		
+				try {
+					FileInputStream fis = new FileInputStream("testSer.ser"); ObjectInputStream ois = new ObjectInputStream(fis);
+					c = (Cat) ois.readObject(); // 4
+					ois.close();
+				} catch (Exception e) { e.printStackTrace(); }
+			}
+		}	
+		
+	* Обязательно должен быть имплементирован интерфейс Serializable
+		class Cat implements Serializable { }
 	
 	* Все классы которые ссылаются на сериализованный объект должны быть Serializable
+		class Pussy{}
+		
+		class Cat implements Serializable { 
+			Pussy pussy;	// Выдаст ошибку потому что не Serializabe
+		}
 	
 	* Если нет возможности сохранить класс то можно пометить его transient
+		class Pussy{}
+		class Cat implements Serializable { 
+			transient Pussy pussy;	// не будет ошибки но и значение будет пустое
+		}
 	
 	* readObject бросает ClassNotFoundException
 	
@@ -1679,8 +1856,7 @@ Serialization (Exam Objective 3.3)
 	
 Inheritance and Serialization
 	* В случае если супер класс реализует Serializable, а потомок да то при восстановление унаследованная часть будет переинициализирована
-		
-		!!!!!Конструктор запустится заново!!!
+		!!!!!Конструктор запустится заново!!!!!
 		
 		class Animal {
 			public String name;
@@ -1690,6 +1866,7 @@ Inheritance and Serialization
 		}
 	
 	* Вызывается конструктор по умолчанию, если его нет то выбрасывается ошибка  java.io.InvalidClassException: no valid constructor
+	
 Dates, Numbers, and Currency (Exam Objective 3.4)
 	* На экзамене необходимо понимать следующие классы
 		■  java.util.Date

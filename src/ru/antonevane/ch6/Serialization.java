@@ -48,7 +48,7 @@ class Dog {
 
 }
 
-class Cat implements Serializable {
+class Cat  implements Serializable {
 
 	private int				age	= 10;
 
