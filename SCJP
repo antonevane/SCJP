@@ -2398,6 +2398,9 @@ Searching Arrays and Collections
 	
 	* успешный поиск возвращает индекс элемента (0 тоже индекс)
 	
+	* При естественной сортировки порядок следующий:
+		пробел, заглавные буквы, строчные буквы
+	
 	* Неуспешный возвращает так называемую insertion point = (-(insertion point) -1)
 	
 	* Коллекция или массив должны быть отсортированы перед поиском
@@ -2548,7 +2551,7 @@ Navigating (Searching) TreeSets and TreeMaps
 		■  subMap(s, b*, e, b*) Returns a submap starting at key s and ending just before key s
 		
 		Если не используется boolean то возвращается SortedSet/SortedMap
-		Если используется boolean то возвращается NavigableSet/NavigableMap, а так же включаются границы в подmap
+		Если используется boolean то возвращается NavigableSet/NavigableMap, а так же включаются границы в подгрупп
 		
 	* SortedMap/SortedSet не имеют pollFirst***() и pollLast***()
 	
@@ -2599,7 +2602,7 @@ Generic Types (Objectives 6.3 and 6.4)
 		test2.add(343);
 		int x2 = test2.get(0);           // cast not necessary
 	
-	* обьявленному Generic типу должен присваиваться тот же самый тип polymorhism не работает
+	* Обьявленному Generic типу должен присваиваться тот же самый тип polymorhism не работает
 		List<Object> myList = new ArrayList<JButton>();  // NO!
   		List<Number> numbers = new ArrayList<Integer>(); // NO!
   		// remember that Integer is a subtype of Number
@@ -2610,8 +2613,8 @@ Generic Types (Objectives 6.3 and 6.4)
   		List<Integer> myList = new ArrayList<Integer>(); // yes
 	
 	* Правила полиморфизма применяется только к базовым типам, а не к Generic
-	 Т.е. List -> ArrayList
-	 	List<JButton> myList = new ArrayList<JButton>();
+	 	Т.е. List -> ArrayList
+	 		List<JButton> myList = new ArrayList<JButton>();
 	 	
 	 * Для массивов polymorphism работает
 	 	import java.util.*;
@@ -2626,6 +2629,8 @@ Generic Types (Objectives 6.3 and 6.4)
 		}
 
 	* ? extends всегда и для интерфейсов и для классов
+	
+	* ? дает право на чтение
 	
 	* Без wildcard ? создание нового элемента в коллекции работает
 		public class PolymorphicGeneric {
@@ -2669,6 +2674,8 @@ Generic Types (Objectives 6.3 and 6.4)
 	   	List<Animal> newanimal - ОК
 	   	animals.add(new Dog()); // OK
 	
+	* super делает доступным изменение коллекции
+	
 	* List<?> list - позволяет передавать в метод list любых элементов
 		List<JButton> buttons = new ArrayList<Jbutton>(); -  работает
 		// но
@@ -2681,12 +2688,41 @@ Generic Types (Objectives 6.3 and 6.4)
 		Нельзя использовать wildcard в создании, только в присвоении
 		
 	* List<? super Animal> dList = new ArrayList<Dog>(); - ошибка компиляции
-	 Тип должен быть Animal или выше
-	 
-	* В Generic объявлении метода - необходимо сначало объявить тип, а потом указать возвращаемое значение
-  		public <T> void makeArrayList(T t) {} // ОК type is defined righ
-  		
-  		public void <T> makeArrayList(T t) {} // type is defined wrong - after return type
+	 Тип должен быть Animal или выше в иерархии (Object)
+
+Generic Declarations
+	* Пример декларирования Generic класса
+		public class UseTwo<T, X> {
+		    T one;
+		    X two;
+		    UseTwo(T one, X two) {
+		      this.one = one;
+		      this.two = two;
+		    }
+		    T getT() { return one; }
+		    X getX() { return two; }
+		  // test it by creating it with <String, Integer>
+		    public static void main (String[] args) {
+		      UseTwo<String, Integer> twos =
+		                      new UseTwo<String, Integer>("foo", 42);
+		      String theT = twos.getT(); // returns a String
+		      int theX = twos.getX();   // returns Integer, unboxes to int
+		    }
+		}
+		
+	* Использование вместо ?
+		public class AnimalHolder<T extends Animal> { // use "T" instead
+		                                                // of "?"
+		   T animal;
+		   public static void main(String[] args) {
+		     AnimalHolder<Dog> dogHolder = new AnimalHolder<Dog>(); // OK
+		     AnimalHolder<Integer> x = new AnimalHolder<Integer>(); // NO!
+		   }
+		}
+
+Creating Generic Methods
+	* В методах <T> должен обязательно декларироваться до объявления возвращаемого типа
+		public <T> void makeArrayList(T t)
   		
   	* Объявление типа в конструкторе реально 
   		public class Radio {
