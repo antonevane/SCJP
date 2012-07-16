@@ -48,8 +48,8 @@ public class IO {
 		
 	}
 	
-	public void A() throws InterruptedException {
-		
+	public void A() {
+		File f1 = new File("");
 	}
 
 	@Override

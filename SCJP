@@ -1689,14 +1689,14 @@ Using FileWriter and FileReader
 			■  new File(String, String)
 			
 			//Методы
-			■  boolean createNewFile()
-			■  boolean delete() - удаляет либо файл либо директорию, директория должна быть пустая
-			■  boolean exists()
-			■  boolean isDirectory() - 
-			■  boolean isFile()
-			■  String [] list() - список директорий
-			■  boolean mkdir()
-			■  boolean renameTo(File) // Переименовывает директории даже если не пустые
+			■  boolean createNewFile() throws IOException
+			■  boolean delete() - удаляет либо файл либо директорию, директория должна быть пустая. Не бросает checked Exception
+			■  boolean exists() - Не бросает checked Exception
+			■  boolean isDirectory() - Не бросает checked Exception
+			■  boolean isFile() - Не бросает checked Exception
+			■  String [] list() - список директорий. Не бросает checked Exception
+			■  boolean mkdir() - Не бросает checked Exception
+			■  boolean renameTo(File) // Переименовывает директории даже если не пустые. Не бросает checked Exception
 				
 				File newName = new File(delDir, null); 	// Имя файла null
 				delFile2.renameTo(newName); 			// Выбросит NullPointerException
