@@ -2832,16 +2832,23 @@ Static Nested Classes
 		
 	* это значит к нему есть доступ как статическому члену без ссылки на внешний класс
 	
-	* Инстанцирование static inner class: BigOuter.Nest n = new BigOuter.Nest();   // both class names
+	* Инстанцирование static inner class: 
+		BigOuter.Nest n = new BigOuter.Nest();   // both class names
 	
 	* На экзамене самая распространенная проблема это использование стического внутреннего класса с нестатическими переменными
 	
 Defining, Instantiating, and Starting Threads (Objective 4.1)
-	* Для экзамена необходимо знать как миниму 4 метода:
-		■  start()
-  		■  yield()
-  		■  sleep()
-  		■  run()
+	* Для экзамена необходимо знать как миниму эти методы:
+		■  public void start()													- стартует поток запуская метод run()
+  		■  public static void yield()											- временно приостанавливает поток, давая другим выполнится (отпускает блокировку на объект)
+  		■  public static void sleep(long millis) throws InterruptedException		- заставляет выполняющийся поток приостановится, сохраняя блокировку, минимально на время указанное в параметре					-
+  		■  Runnable: void run()													- непосредственный вызов метода run()
+  		■  public static Thread currentThread()	 								- возвращает текущий поток исполнения
+  		■  public final boolean isAlive()										- производит тестирование потока на то что он был стартован и не умер
+  		■  public final void setPriority(int newPriority)						- изменяет притритет потока
+  		■  public final void setName(String name)								- устанавливает имя потока
+  		■  public final void join() throws InterruptedException					- ждет поток до смерти
+  		■  public final void join(long millis) throws InterruptedException		- ждет не более указанное в параметре количество времени до того как умереть, 0 значит ждет бесконечно
   		
   	* Поток можно заставить выполняться 2мя способами:
   		■ Extend the java.lang.Thread class.
@@ -2900,7 +2907,7 @@ Defining, Instantiating, and Starting Threads (Objective 4.1)
 		
 	* На экзамене встречается следующий код
 		Thread t = new Thread();
-		t.run();  // Legal, but does not start a new thread
+		t.run();  // Легально, но новый поток не запускается а выполняется метод run()
 		
 	* Поток имеет имя которое можнополучить вызвав метод getName() у экземпляра, но экземпляр получить можно вызвав статический метод
 		Thread.currentThread()
@@ -2974,7 +2981,7 @@ Thread States and Transitions (Objective 4.2)
 			Важно что один поток не говорит заблокироваться другому. 
 			Если есть ссылка на поток и будет вызван
 				t.sleep();   or     t.yield()
-			то это никак не повлияет на поток, только статические методы делаю это
+			то это никак не повлияет на поток, только статические методы делают это
 		■ Dead
 			Это состояние в которое поток переходит по окончанию метода run().
 			Его нельзя больше запускать, но ссылка на него еще будет
@@ -2986,7 +2993,7 @@ Sleeping
 	
 	* Если случится остановка во время того как поток sleeping то выбросится исключение InterruptedException
 
-Thread Priorities and yield( )
+Thread Priorities and yield()
 	* приоритет потока обычно от 1 до 10
 	
 	* По умолчанию поток получает приоритет выполняемого потока в котором он создан
@@ -3010,7 +3017,7 @@ Thread Priorities and yield( )
 		Thread.NORM_PRIORITY  (5)
 		Thread.MAX_PRIORITY  (10)
 
-	* Метод static Thread.yield() - метод не гарантировано переводит поток из runnig в runnable и дает потом одинакового с ним приоритета окно для работы
+	* Метод static Thread.yield() - метод не гарантировано переводит поток из runnig в runnable и дает окно для выполение для одинакового с ним приоритета потока
 		Он никогда не переводит поток в waiting/sleeping/blocking
 		
 	* non-static join() класса Thread - позволяет одному потоку присоединяться в конец другого потока
@@ -3029,8 +3036,8 @@ Thread Priorities and yield( )
   	* Следующие сценарии выводят поток из состояния running
   		■ метод run() заканчивается
   		■ Вызов wait() на объекте
-  		■ поток не может получить lock на объект код которого запущен	
-  		■ thread scheduler может решить перевести поток из состояния runnign в состояния runnable чтобы дать другим шанс на запуск
+  		■ поток не может получить lock на объект код которого запущен
+  		■ thread scheduler может решить перевести поток из состояния running в состояния runnable чтобы дать другим шанс на запуск
   		
 Synchronizing Code (Objective 4.3)
 	* Тейзисы о locking and synchronization:
@@ -3162,7 +3169,6 @@ Thread Interaction (Objective 4.4)
 	* run() - принадлежит интерфейсу Runnable
 	
 Using the javac and java Commands (Exam Objectives 7.1, 7.2, and 7.5)
-
 	* Унифицированный синтаксис javac
 		javac [options] [source files]
 		
