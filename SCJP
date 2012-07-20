@@ -166,7 +166,13 @@ Nonaccess Member Modifiers
 	
 	* var-args синтаксис Тип .... <имя параметра>
 	
+	* var-args при использовании при использовании может вообще не передаваться в метод 
+		public static final void main(String ... args);
+		public static final void main(String[] ... args);
+	
 	* var-args - обязан быть последним параметром
+	
+	* var-args - параметр можно и не передовать
 	
 	* Аргумент то что передается в метод
 	
@@ -245,6 +251,7 @@ Static Variables and Methods
 		■  методы локальных вложенных классов
 		■  переменные локального вложенного класса
 		■  локальные переменные
+		■  super
 	
 Declaring Enums
 	* Декларирование вне класса
@@ -266,6 +273,11 @@ Declaring Enums
 		static, final, abstract, protected, or private.
 	
 	* enum имеет метод values() - который возвращает массив перечислений
+	
+	* enum имеет метод enum valueOf("имя перечисления") - который возвращает массив перечислений
+		enum Z {A}
+		....
+		A a= Z.valueOf("A")
 	
 	* Конструктор enum НЕЛЬЗЯ вызывать
 	
@@ -365,11 +377,11 @@ Overriding / Overloading (Exam Objectives 1.5 and 5.4)
 		     public void buck() { }
 		}
 
-	* Если вызвать метод который не определенн ссылкой то будет ошибка компиляции
+	* Если вызвать метод который не определен ссылкой то будет ошибка компиляции
 		Animal c = new Horse();
   		c.buck();  // Can't invoke buck(); Animal class doesn't have that method
   		
-  	* Переопределенные методы не могут быть более закртыми чем сам метод т.е. public метод не может быть protected, private (static)
+  	* Переопределенные методы не могут быть более закрытыми чем сам метод т.е. public метод не может быть protected, private (static)
   	
   	* Если метод у родителя private можно объявить с такой же сигнатурой метод в подклассе так как не наследуются private методы
   	
@@ -1158,7 +1170,7 @@ Operators
 		 
 	* instanceof null всегда false
 	
-	* непрямая проверка instanceof true если супер класс имплеметирует интерфейс то и потомки неявно его имплеметирует
+	* непрямая проверка instanceof true если супер класс имплементирует интерфейс то и потомки неявно его имплеметирует
 		interface Foo { }
 		class A implements Foo { }
 		class B extends A { }
@@ -1274,7 +1286,7 @@ Flow, Control, Exceptions, Assertions
 			case 128: // 128 > разрешенных 127
 		}
 		
-	* в switch case и : после метки обязательны
+	* В switch case и : после метки обязательны
 	
 	* В switch char сравнивается как unicode
 	
@@ -1392,6 +1404,8 @@ Common Exceptions and Errors (Exam Objective 2.6)
 		IllegalStateException
 		NumberFormatException
 		AssertionError
+		ClassNotFoundException
+		InterruptedException
 
 Working with the Assertion Mechanism  (Exam Objective 2.3)
 	*Валидное использование Assertion
@@ -1666,7 +1680,7 @@ Using FileWriter and FileReader
 	
 	* FileWriter fw = new FileWriter(file); // Физически создает файл
 	
-	* FileReader - read(char [] buffer), обязательно нужно закрывать
+	* FileReader - int read(char [] buffer), обязательно нужно закрывать - возвращает еоличество прочитанных символов или -1 если конец файла
 	
 	* Reader не иммет flush()
 	
@@ -1678,7 +1692,7 @@ Using FileWriter and FileReader
 		File myFile = new File(myDir, "myFile.txt");
 		myFile.createNewFile();	// exception if no mkdir!
 	
-	* метод delete() у класса File не может удалить директорию если она не пустая
+	* метод boolean delete() у класса File не может удалить директорию если она не пустая
 	
 	* renameTo(File, имя) - выбросит NullPointerEception если передать null в имя нового файла
 	
@@ -1690,13 +1704,13 @@ Using FileWriter and FileReader
 			
 			//Методы
 			■  boolean createNewFile() throws IOException
-			■  boolean delete() - удаляет либо файл либо директорию, директория должна быть пустая. Не бросает checked Exception
-			■  boolean exists() - Не бросает checked Exception
-			■  boolean isDirectory() - Не бросает checked Exception
-			■  boolean isFile() - Не бросает checked Exception
-			■  String [] list() - список директорий. Не бросает checked Exception
-			■  boolean mkdir() - Не бросает checked Exception
-			■  boolean renameTo(File) // Переименовывает директории даже если не пустые. Не бросает checked Exception
+			■  boolean delete() 			- удаляет либо файл либо директорию, директория должна быть пустая. Не бросает checked Exception
+			■  boolean exists() 			- Не бросает checked Exception
+			■  boolean isDirectory()		- Не бросает checked Exception
+			■  boolean isFile()			- Не бросает checked Exception
+			■  String [] list()			- список директорий. Не бросает checked Exception
+			■  boolean mkdir()			- Не бросает checked Exception
+			■  boolean renameTo(File)	- Переименовывает директории даже если не пустые. Не бросает checked Exception
 				
 				File newName = new File(delDir, null); 	// Имя файла null
 				delFile2.renameTo(newName); 			// Выбросит NullPointerException
@@ -1740,7 +1754,6 @@ Using FileWriter and FileReader
 			■  new PrintWriter(OutputStream)
 			■  new PrintWriter(File) - Java 5
 			■  new PrintWriter(String) - Java 5
-			
 			
 			//Методы
 			■  close() - закрыть поток
@@ -1786,6 +1799,8 @@ java.io.Console Class
 	* pw = c.readPassword("%s", "pw: "); - 1й параметр формат 2й приветствие
 	
 	* c.format("%c", char_) - форматированный вывод
+	
+	* Имплементирует serializable
 	
 Serialization (Exam Objective 3.3)
 	* ObjectOutputStream.writeObject() // serialize and write
@@ -1974,6 +1989,8 @@ Dates, Numbers, and Currency (Exam Objective 3.4)
 		fn.setParseIntegerOnly(true); //Задает парсинг только integer
 		
 		fn.parse("1234.567") //Выводит 1234
+	
+	* Если в строке для parse() вначале будет цифра все ок
 		
 Parsing, Tokenizing, and Formatting (Exam Objective 3.5)
 	* Простой пример поиска
@@ -2353,9 +2370,10 @@ Queue Interface (FIFO (first-in, first-out))
 Using the Collections Framework (Objectives 6.3 and 6.5)
 	* в ArrayList есть метод удаления по значению который удаляет элемент с наименьшим индексом
 	
-	* Сортировка для List<String> stuff; Collections.sort(stuff);
+	* Сортировка для List<String> stuff; 	
+		Collections.sort(stuff);
 	
-	* Если поместить в List собственный объект без добавления Comparable то будет ошибка
+	* Если поместить в List собственный объект без добавления Comparable то будет ошибка времени исполнения
 	
 	* String реализует Comparable<String>
 	
@@ -2433,15 +2451,15 @@ Searching Arrays and Collections
 		java.util.Arrays
 			■  static List asList(T[])								- ￼конвертирует массив с список
 			■  static int binarySearch(Object[], key)				- осуществляют поис в отсортированном массиве 
-			   static int binarySearch(primitive[], key)				возвращают индекс найденного элемента
+			■  static int binarySearch(primitive[], key)					 возвращают индекс найденного элемента
 			■  static int binarySearch(T[], key, Comparator)			- осуществляет поиск в заданном массиве с учетом компоратора
 			■  static boolean equals(Object[], Object[])				- сравнивает 2 массива на эквивалентность по содержимому
-			   static boolean equals(primitive[], primitive[])
+			■  static boolean equals(primitive[], primitive[])
 			■  public static void sort(Object[ ] )					- сортирует массив в натуральном порядке (массив должен реализовывать  
-			   public static void sort(primitive[ ] )					Comparable иначе ошибка в Runtime)
+			■  public static void sort(primitive[ ] )					Comparable иначе ошибка в Runtime
 			■  public static void sort(T[], Comparator)				- сортирует элементы массива используя компоратор
 			■  public static String toString(Object[])				- создает строку содержащую контент массива 
-			   public static String toString(primitive[])
+			■  public static String toString(primitive[])
 
 		java.util.Collections  
 			■  static int binarySearch(List, key)					- осуществляют поис в отсортированном списке 
@@ -2543,19 +2561,19 @@ Navigating (Searching) TreeSets and TreeMaps
 	
 	* Если в submap положить то что выходит за границу выкинется Exception = java.lang.IllegalArgumentException: key out of range
 		
-		■  headSet(e, b*) 		Returns a subset ending at element e and exclusive of e
-		■  headMap(k, b*) 		Returns a submap ending at key k and exclusive of key k
-		■  tailSet(e, b*) 		Returns a subset starting at and inclusive of element e
-		■  tailMap(k, b*) 		Returns a submap starting at and inclusive of key k
-		■  subSet(s, b*, e, b*) Returns a subset starting at element s and ending just before element e
-		■  subMap(s, b*, e, b*) Returns a submap starting at key s and ending just before key s
+		■  headSet(e, b*)		Returns a subset ending at element e and exclusive of e
+		■  headMap(k, b*)		Returns a submap ending at key k and exclusive of key k
+		■  tailSet(e, b*)		Returns a subset starting at and inclusive of element e
+		■  tailMap(k, b*)		Returns a submap starting at and inclusive of key k
+		■  subSet(s, b*, e, b*)	Returns a subset starting at element s and ending just before element e
+		■  subMap(s, b*, e, b*)	Returns a submap starting at key s and ending just before key s
 		
 		Если не используется boolean то возвращается SortedSet/SortedMap
 		Если используется boolean то возвращается NavigableSet/NavigableMap, а так же включаются границы в подгрупп
 		
 	* SortedMap/SortedSet не имеют pollFirst***() и pollLast***()
 	
-	* Если вставляется в subMap то это добавляется и в основной мап так как это ссылка на тотже мап
+	* Если вставляется в subMap то это добавляется и в основной мап так как это ссылка на тот же мап
 	
 	* Типичная ситуация для экзамена когда вызывается на subMap или map - pollFirst*:
 		 ■  удаляется для обоих если совпадают ключи
@@ -2701,6 +2719,7 @@ Generic Declarations
 		    }
 		    T getT() { return one; }
 		    X getX() { return two; }
+		  
 		  // test it by creating it with <String, Integer>
 		    public static void main (String[] args) {
 		      UseTwo<String, Integer> twos =
@@ -2764,7 +2783,7 @@ Method-Local Inner Classes
 	
 	* Inner классы не могут использовать локальных переменных - это приводит к ошибке компиляции
 		public void innerWiredDecalre() {
-			int a = 10;
+			int a = 10; // not final
 			class Inner2 {
 				private void go(){
 					System.out.println(a); // ошибка компиляции
@@ -3044,7 +3063,7 @@ Synchronizing Code (Objective 4.3)
 		■ только метод или блок кода может быть synchronized
 		■ каждый объект имеет 1 lock
 		■ не все методы в классе должны быть synchronized
-		■ если один поток вошел в synchronized  мето остальные ждут
+		■ если один поток вошел в synchronized  метод остальные ждут
 		■ если класс имеет синхронизованные и не синхронизованные методы то множество потоков могут попрежнему обращаться к не синхронизованным методам
 		■ если поток засыпает то он держит lock и не отпускает его
 		■ поток может захватить несколько lock на разные объекты
@@ -3160,7 +3179,7 @@ Thread Interaction (Objective 4.4)
 	
 	* Хорошой практикой считается проверка какого либо значения в цикле прежде чем устанавливать wait()
 	
-	* notify() может вызываться thread scheduler для своихнужд
+	* notify() может вызываться thread scheduler для своих нужд
 	
 	* wait(), notify(), notifyAll() - принадлежат классу java.lang.Object
 	

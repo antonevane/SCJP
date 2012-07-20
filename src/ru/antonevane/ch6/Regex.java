@@ -29,5 +29,10 @@ public class Regex {
 		}
 		System.out.println(z);
 		
+		System.out.println(z%2==0);
+		
+		boolean zx = true;
+		System.out.println(zx=z==2);
+		
 	}
 }
