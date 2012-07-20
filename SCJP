@@ -2160,6 +2160,9 @@ Formatting with printf() and format()
 	* Ошибки компиляции при указании format
 		System.out.format("%d", 12.3); - ошибка компиляции потому что требуется double
 		
+	* printf и %b
+		Если значение не null то будет true иначе false
+		
 Overriding hashCode() and equals() (Objective 6.2)
 	* На экзамене попадаюся примеры на правила переопределения а не на equals
 		 public boolean equals(Boo b) { } // Compiler error

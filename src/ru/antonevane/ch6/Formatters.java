@@ -8,8 +8,8 @@ public class Formatters {
 	public static void main(String[] args) {
 		double a = -1.000011121;
 		// System.out.format("%0,7d", 1232349.01f);
-		
-		System.out.format(">%1$0,20.1f<", a);
+
+		System.out.printf("Hello %f ia %b %f", Math.PI, "", null);
 
 	}
 
