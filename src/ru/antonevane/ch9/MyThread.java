@@ -10,6 +10,7 @@ public class MyThread extends Thread {
 		MyThread myThread = new MyThread();
 
 		myThread.start();
+		myThread.run();
 		myThread.sleep(10);
 
 	}

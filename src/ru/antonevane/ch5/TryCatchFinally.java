@@ -11,6 +11,12 @@ public class TryCatchFinally {
 
 		int x = 1;
 		assert (x == 1) : x;
+		
+		getV();
 	}
 	
+	
+	static void getV(String ... s){
+		System.out.println(s.length);
+	}
 }

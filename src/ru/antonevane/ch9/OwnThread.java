@@ -1,6 +1,13 @@
 package ru.antonevane.ch9;
 
-public class OwnThread extends Thread {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+interface CO {
+	
+}
+public class OwnThread extends Thread implements CO{
 
 	@Override
 	public void run() {
@@ -22,11 +29,36 @@ public class OwnThread extends Thread {
 //		myNeThread.start();
 //		
 //		ownThread.start();
+		Boolean b = new Boolean(null);
+		System.out.println(b);
 		
+		List s = new ArrayList<String>();
+		
+		s.add("C1H");
+		s.add("C2H");
+		s.add("CHA");
+		s.add("CHB");
+		Collections.sort(s);
+		
+		System.out.println(s);
+		synchronized ("") {
+			
+		}
+		
+		ZXCO z= new ZXCO();
+		CO c = null;
+		
+		z = (ZXCO)c;
+		
+		System.out.format("%s",new StringBuffer("ssss"));
 		
 
 	}
 
+}
+
+class ZXCO extends OwnThread {
+	
 }
 
 class SuperThread extends Thread {
